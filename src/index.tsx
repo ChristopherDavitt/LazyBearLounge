@@ -9,12 +9,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const breakpoints = {
-  xsm: '300px',
+  xsm: '30px',
   sm:'620px',
   md: '768px',
   lg: '960px',
   xl: '1200px',
-  dxl: '1536px'
 }
 
 const theme = extendTheme({

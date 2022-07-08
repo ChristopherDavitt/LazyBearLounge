@@ -21,28 +21,26 @@ import { Link as RouterLink } from 'react-router-dom';
 import logo from '../assets/images/DiscordIcon.png'
 
 
-export default function Header() {
+export default function Navbar() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selected, setSelected] = useState<string>('home');
 
-
-
   return (
     <>
-    <Box px={4}>
+    <Box 
+      px={4}
+    >
       <Flex
-        p='0.1rem 1rem 0 1rem'
         gap='1rem'
         align='center'
         justify='space-between'
-        sx={{borderBottom: 'solid 1px rgb(235, 235, 245)'}}
+        borderBottom={'solid 1px rgb(240,240,240)'}
         >
           <Flex
             gap='2rem'
             align='center'
-            
             >
             <Image w='80px' src={logo} alt='logo' />
             <Link 
@@ -50,7 +48,7 @@ export default function Header() {
               as={RouterLink} 
               to='/home'
               style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-              sx={{fontWeight: `${selected == 'home' ? '700' : '400'}`, fontSize: '20px', color: 'rgb(60,60,60)'}}
+              sx={{fontWeight: `${selected == 'home' ? '700' : '600'}`, fontSize: '18px', color: `${selected == 'home' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
               onClick={() => setSelected('home')}
               >
               Home
@@ -60,14 +58,24 @@ export default function Header() {
               display={{xsm: 'none', sm:'inherit', md: 'inherit', lg:'inherit' }}
               to='/home'
               style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-              sx={{fontWeight: `${selected == 'staking' ? '700' : '400'}`, fontSize: '20px', color: 'rgb(60,60,60)'}}
+              sx={{fontWeight: `${selected == 'staking' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'staking' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
               onClick={() => setSelected('staking')}
               >
               Staking
             </Link>
             <Link 
+              as={RouterLink} 
+              display={{xsm: 'none', sm:'inherit', md: 'inherit', lg:'inherit' }}
+              to='/home'
               style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-              sx={{fontWeight: '400', fontSize: '20px', color: 'rgb(60,60,60)'}}
+              sx={{fontWeight: `${selected == 'mint' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'mint' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
+              onClick={() => setSelected('mint')}
+              >
+              Mint
+            </Link>
+            <Link 
+              style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
+              sx={{fontWeight: '600', fontSize: '18px', color: 'rgb(150,150,150)'}}
               isExternal={true}
               display={{xsm: 'none', sm:'inherit', md: 'inherit', lg:'inherit' }}
               href='https://github.com'
@@ -109,22 +117,33 @@ export default function Header() {
                   
                   as={RouterLink} 
                   to='/home'
+                  onClick={() => setSelected('home')}
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-                  sx={{fontWeight: '700', fontSize: '20px', color: 'rgb(60,60,60)'}}
+                  sx={{fontWeight: `${selected == 'home' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'home' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
                   >
                   Home
                 </Link>
                 <Link 
                   as={RouterLink} 
                   to='/home'
+                  onClick={() => setSelected('staking')}
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-                  sx={{fontWeight: '400', fontSize: '20px', color: 'rgb(60,60,60)'}}
+                  sx={{fontWeight: `${selected == 'staking' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'staking' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
+                  >
+                  Staking
+                </Link>
+                <Link 
+                  as={RouterLink} 
+                  to='/home'
+                  onClick={() => setSelected('mint')}
+                  style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
+                  sx={{fontWeight: `${selected == 'mint' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'mint' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
                   >
                   Staking
                 </Link>
                 <Link 
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-                  sx={{fontWeight: '400', fontSize: '20px', color: 'rgb(60,60,60)'}}
+                  sx={{fontWeight: '600', fontSize: '18px', color: 'rgb(150,150,150)'}}
                   isExternal={true}
                   href='https://github.com'
                   >

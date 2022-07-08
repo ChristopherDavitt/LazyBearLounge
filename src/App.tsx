@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Header from './components/pages/Header';
+import Navbar from './components/pages/Navbar';
+import Home from './components/pages/Home';
 
 function App() {
 
@@ -8,9 +9,9 @@ function App() {
 
   return (
     <>
-      <Header />
+      <Navbar />
       <Routes location={location} key={location.pathname}>
-        <Route path='/' />
+        <Route path='/home' element={<Home />} />
       </Routes>
 
     </>
