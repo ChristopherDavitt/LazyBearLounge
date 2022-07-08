@@ -17,6 +17,9 @@ import {
   Heading,
   Checkbox,
   SimpleGrid,
+  Grid,
+  Hide,
+  Show
 } from '@chakra-ui/react';
 import {
   HamburgerIcon,
@@ -30,7 +33,7 @@ export default function Home() {
   return (
    
     <Stack
-      overflowY='auto'
+      overflowY='hidden'
       align='center'
       justify='center'
       p={4}
@@ -41,18 +44,18 @@ export default function Home() {
       m='auto'
       direction={{xsm:'column', md:'row'}}
       >
-      <Stack
-        minW={{md: '220px', xsm: 'calc(100vw - 60px)'}}
+      <Grid
+        minW={{md: '220px', xsm: 'calc(100vw - 40px)'}}
         w={{md: '22vw', xsm: 'calc(100vw - 60px)'}}
         maxW={{md: '280px', xsm: 'calc(100vw - 60px)'}}
-        pb='10px'
-        align='start'
-        gap='1rem'
+        templateColumns={{sm: '1fr 1fr', md: '1fr', lg:'1fr', xl: '1fr'}}
         minH={{md: '600px'}}
+        gap='1rem'
         h={{md: 'calc(100vh - 150px)'}}
         maxH={{md: '700px'}}
+        overflow='hidden'
+        pb='10px'
         >
-        <Stack w='100%' gap='1rem' justify='space-between' align='start' direction={{xsm: 'column', sm: 'row', md: 'column', lg: 'column', xl: 'column' }}>
         <VStack
           align='center'
           w='100%'
@@ -146,8 +149,7 @@ export default function Home() {
             5:00:00
           </Text>
         </VStack>
-        </Stack>
-        <Stack w='100%' justify='space-between' gap='1rem' direction={{xsm: 'column', sm: 'row', md: 'column', lg: 'column', xl: 'column' }}>
+        
         <Stack 
           align='center'
           w='100%'
@@ -197,7 +199,6 @@ export default function Home() {
           align='center'
           w='100%'
           boxShadow='md'
-          mb='1rem' 
           borderRadius='lg'
           spacing={0}
           p='0.5rem'
@@ -267,14 +268,13 @@ export default function Home() {
             </Text>
           </Flex>
         </Stack>
-        </Stack>
-      </Stack>
+      </Grid>
       <Box
-        w={{md: 'calc(100vw - 300px)', xsm: 'calc(100vw - 60px)'}}
+        w={{md: 'calc(100vw - 300px)', xsm: 'calc(100vw - 40px)'}}
         maxW='1200px' 
-        minH='600px'
-        h='calc(100vh - 150px)'
-        maxH='700px'
+        minH={{sm: '600px'}}
+        h={{xsm: '920px',sm: 'calc(100vh - 150px)'}}
+        maxH={{sm: '700px'}}
         borderRadius='lg'
         p='0.5rem 1rem'
         bg='rgb(240,240,240)'
@@ -295,14 +295,26 @@ export default function Home() {
               <Heading as='h5'>
                 Bears Unstaked
               </Heading>
-              <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
-                Select All
-              </Checkbox>
+              <Hide below='sm'> 
+                <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
+                  Select All
+                </Checkbox>
+              </Hide>
+             
             </Flex>
             <Flex gap='5px' align='center'>
-              <Text fontWeight='400'>
-                Stake:
-              </Text>
+              <VStack>
+                <Hide above='sm'>
+                  <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
+                    All
+                  </Checkbox>
+                </Hide>
+                
+                <Text fontWeight='400'>
+                  Stake:
+                </Text>
+              </VStack>
+              
               <Stack direction={{xsm: 'column', lg: 'row'}}>
                 <Button 
                   h='30px'
@@ -342,55 +354,164 @@ export default function Home() {
               <Text># 1235</Text>
             </Stack>
           </HStack>
-          <HStack w='100%' position='relative' top='-30px' justify='space-around' h='calc(100% - 160px)'>
-            <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
-              <HStack align='baseline'>
-                <Image src={logo} w='60px' position='relative' top='30px' />
-                <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
-                  Select All
-                </Checkbox>
-              </HStack>
-              <SimpleGrid templateColumns={{ xl: '1fr 1fr'}} spacing='0px' p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
-                <Stack justify='start' align='center' spacing='1px'>
-                  <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-                  <Text># 1235</Text>
-                </Stack>
-                <Stack justify='start' align='center' spacing='5px'>
-                  <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-                  <Text># 1235</Text>
-                </Stack>
-              </SimpleGrid>
-            </VStack>
-            <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
-              <HStack align='baseline'>
-                <Image src={logo} w='60px' position='relative' top='30px'/>
-                <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
-                  Select All
-                </Checkbox>
-              </HStack>
-              <SimpleGrid templateColumns={{ xl: '1fr 1fr'}} spacing='0px' p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
-                <Stack justify='start' align='center' spacing='5px'>
-                  <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-                  <Text># 1235</Text>
-                </Stack>
-              </SimpleGrid>
-            </VStack>
-            <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
-              <HStack align='baseline'>
-                <Image src={logo} w='60px' position='relative' top='30px' />
-                <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
-                  Select All
-                </Checkbox>
-              </HStack>
-              <SimpleGrid templateColumns={{ xl: '1fr 1fr'}} spacing='0px'  p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
-                <Stack justify='start' align='center' spacing='5px'>
-                  <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix'  />
-                  <Text># 1235</Text>
-                </Stack>
-                {/* Map through Peacefulist */}
-              </SimpleGrid>
-            </VStack>
-          </HStack>
+          <Hide below='sm'>
+            <HStack w='100%' position='relative' top='-30px' justify='space-around' h='calc(100% - 160px)'>
+              <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
+                <HStack align='baseline'>
+                  <Image src={logo} w='60px' position='relative' top='30px' />
+                  <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
+                    Select All
+                  </Checkbox>
+                </HStack>
+                <SimpleGrid templateColumns={{ xl: '1fr 1fr'}} spacing='0px' p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                  <Stack justify='start' align='center' spacing='1px'>
+                    <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
+                    <Text># 1235</Text>
+                  </Stack>
+                  <Stack justify='start' align='center' spacing='5px'>
+                    <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
+                    <Text># 1235</Text>
+                  </Stack>
+                </SimpleGrid>
+              </VStack>
+              <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
+                <HStack align='baseline'>
+                  <Image src={logo} w='60px' position='relative' top='30px'/>
+                  <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
+                    Select All
+                  </Checkbox>
+                </HStack>
+                <SimpleGrid templateColumns={{ xl: '1fr 1fr'}} spacing='0px' p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                  <Stack justify='start' align='center' spacing='5px'>
+                    <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
+                    <Text># 1235</Text>
+                  </Stack>
+                </SimpleGrid>
+              </VStack>
+              <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
+                <HStack align='baseline'>
+                  <Image src={logo} w='60px' position='relative' top='30px' />
+                  <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
+                    Select All
+                  </Checkbox>
+                </HStack>
+                <SimpleGrid templateColumns={{ xl: '1fr 1fr'}} spacing='0px'  p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                  <Stack justify='start' align='center' spacing='5px'>
+                    <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix'  />
+                    <Text># 1235</Text>
+                  </Stack>
+                  {/* Map through Peacefulist */}
+                </SimpleGrid>
+              </VStack>
+            </HStack>
+          </Hide>
+          <Show below='sm'>
+            <Flex w='100%' align='center' justify='space-between'>
+              <Heading as='h2'>Peaceful</Heading>
+              <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
+                All
+              </Checkbox>
+              <VStack>
+                <Button 
+                  h='30px'
+                  variant={'outline'}
+                  bg='white'
+                  boxShadow={'md'}
+                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                  Hungry
+                </Button>
+                <Button 
+                  h='30px'
+                  variant={'outline'}
+                  bg='white'
+                  boxShadow={'md'}
+                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                  Frenzy
+                </Button>
+              </VStack>
+            </Flex>
+            <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
+              {/* Map through the list of unstaked NFTs */}
+              <Stack p='0.5rem 0.7rem' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
+                <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
+                <Text># 1235</Text>
+              </Stack>
+              <Stack justify='start' align='center' spacing='5px'>
+                <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
+                <Text># 1235</Text>
+              </Stack>
+            </HStack>
+            <Flex w='100%' align='center' justify='space-between'>
+              <Heading as='h2'>Peaceful</Heading>
+              <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
+                All
+              </Checkbox>
+              <VStack>
+                <Button 
+                  h='30px'
+                  variant={'outline'}
+                  bg='white'
+                  boxShadow={'md'}
+                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                  Hungry
+                </Button>
+                <Button 
+                  h='30px'
+                  variant={'outline'}
+                  bg='white'
+                  boxShadow={'md'}
+                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                  Frenzy
+                </Button>
+              </VStack>
+            </Flex>
+            <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
+              {/* Map through the list of unstaked NFTs */}
+              <Stack p='0.5rem 0.7rem' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
+                <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
+                <Text># 1235</Text>
+              </Stack>
+              <Stack justify='start' align='center' spacing='5px'>
+                <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
+                <Text># 1235</Text>
+              </Stack>
+            </HStack>
+            <Flex w='100%' align='center' justify='space-between'>
+              <Heading as='h2'>Peaceful</Heading>
+              <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
+                All
+              </Checkbox>
+              <VStack>
+                <Button 
+                  h='30px'
+                  variant={'outline'}
+                  bg='white'
+                  boxShadow={'md'}
+                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                  Hungry
+                </Button>
+                <Button 
+                  h='30px'
+                  variant={'outline'}
+                  bg='white'
+                  boxShadow={'md'}
+                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                  Frenzy
+                </Button>
+              </VStack>
+            </Flex>
+            <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
+              {/* Map through the list of unstaked NFTs */}
+              <Stack p='0.5rem 0.7rem' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
+                <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
+                <Text># 1235</Text>
+              </Stack>
+              <Stack justify='start' align='center' spacing='5px'>
+                <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
+                <Text># 1235</Text>
+              </Stack>
+            </HStack>
+          </Show>
         </VStack>  
       </Box>    
     </Stack>
