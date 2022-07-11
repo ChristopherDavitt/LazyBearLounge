@@ -46,7 +46,7 @@ export default function Navbar() {
             <Link 
               display={{xsm: 'none', sm:'inherit', md: 'inherit', lg:'inherit' }}
               as={RouterLink} 
-              to='/home'
+              to='/'
               style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
               sx={{fontWeight: `${selected == 'home' ? '700' : '600'}`, fontSize: '18px', color: `${selected == 'home' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
               onClick={() => setSelected('home')}
@@ -56,7 +56,7 @@ export default function Navbar() {
             <Link 
               as={RouterLink} 
               display={{xsm: 'none', sm:'inherit', md: 'inherit', lg:'inherit' }}
-              to='/home'
+              to='/staking'
               style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
               sx={{fontWeight: `${selected == 'staking' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'staking' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
               onClick={() => setSelected('staking')}
@@ -66,7 +66,7 @@ export default function Navbar() {
             <Link 
               as={RouterLink} 
               display={{xsm: 'none', sm:'inherit', md: 'inherit', lg:'inherit' }}
-              to='/home'
+              to='/mint'
               style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
               sx={{fontWeight: `${selected == 'mint' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'mint' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
               onClick={() => setSelected('mint')}
@@ -116,7 +116,7 @@ export default function Navbar() {
                 <Link 
                   
                   as={RouterLink} 
-                  to='/home'
+                  to='/'
                   onClick={() => setSelected('home')}
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
                   sx={{fontWeight: `${selected == 'home' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'home' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
@@ -125,7 +125,7 @@ export default function Navbar() {
                 </Link>
                 <Link 
                   as={RouterLink} 
-                  to='/home'
+                  to='/staking'
                   onClick={() => setSelected('staking')}
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
                   sx={{fontWeight: `${selected == 'staking' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'staking' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
@@ -134,12 +134,12 @@ export default function Navbar() {
                 </Link>
                 <Link 
                   as={RouterLink} 
-                  to='/home'
+                  to='/mint'
                   onClick={() => setSelected('mint')}
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
                   sx={{fontWeight: `${selected == 'mint' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'mint' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
                   >
-                  Staking
+                  Mint
                 </Link>
                 <Link 
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}

@@ -19,7 +19,8 @@ import {
   SimpleGrid,
   Grid,
   Hide,
-  Show
+  Show,
+  
 } from '@chakra-ui/react';
 import {
   HamburgerIcon,
@@ -29,9 +30,8 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import logo from '../assets/images/DiscordIcon.png'
 
-export default function Home() {
+export default function Staking() {
   return (
-   
     <Stack
       overflowY='hidden'
       align='center'
@@ -58,6 +58,7 @@ export default function Home() {
         >
         <VStack
           align='center'
+          justify='space-around'
           w='100%'
           boxShadow={'md'}
           borderRadius='lg'
@@ -93,65 +94,9 @@ export default function Home() {
             1:00:00
           </Text>
         </VStack>
-        <VStack
-          align='center'
-          w='100%'
-          boxShadow={'md'}
-          borderRadius='lg'
-          spacing={0}
-          p='0.5rem'
-          bg='rgb(240,240,240)'
-          >
-          <Heading 
-            as='h3'
-            size='lg'
-            color='rgb(60,60,60)'
-            >
-            River Supply
-          </Heading>
-          <Box
-            w='95%'
-            h='25px'
-            borderRadius='7px'
-            border='solid 1px rgb(60,60,60)'
-            bg={'white'}
-            boxShadow='md'>
-            <Stack  
-              w='40%'
-              h='100%'
-              borderLeftRadius='7px'
-              bg={'red.200'}
-              justify='center'
-              align='center'>
-              <Text
-                fontSize='lg'
-                fontWeight='400'
-                color='rgb(90,90,90)'
-                as='i'
-                >
-                50000
-              </Text>
-            </Stack>
-          </Box>
-          
-          <Heading 
-            as='h3'
-            size='lg'
-            color='rgb(60,60,60)'
-            >
-            Resupply
-          </Heading>
-          <Text
-            fontSize='lg'
-            fontWeight='light'
-            color='rgb(90,90,90)'
-            >
-            5:00:00
-          </Text>
-        </VStack>
-        
         <Stack 
           align='center'
+          justify='space-around'
           w='100%'
           boxShadow={'md'}
           borderRadius='lg'
@@ -195,8 +140,67 @@ export default function Home() {
             </Button>
           </HStack>
         </Stack>
+        <VStack
+          align='center'
+          justify='space-around'
+          w='100%'
+          boxShadow={'md'}
+          borderRadius='lg'
+          spacing={0}
+          p='0.5rem'
+          bg='rgb(240,240,240)'
+          >
+          <Heading 
+            as='h3'
+            size='lg'
+            color='rgb(60,60,60)'
+            >
+            River Supply
+          </Heading>
+          <Box
+            w='95%'
+            h='25px'
+            borderRadius='7px'
+            border='solid 1px rgb(60,60,60)'
+            bg={'white'}
+            boxShadow='md'>
+            <Stack  
+              w='40%'
+              h='100%'
+              borderLeftRadius='7px'
+              bg={'red.200'}
+              justify='center'
+              align='center'>
+              <Text
+                fontSize='lg'
+                fontWeight='600'
+                color='rgb(60,60,60)'
+                as='i'
+                >
+                50000
+              </Text>
+            </Stack>
+          </Box>
+          
+          <Heading 
+            as='h3'
+            size='lg'
+            color='rgb(60,60,60)'
+            >
+            Resupply
+          </Heading>
+          <Text
+            fontSize='lg'
+            fontWeight='light'
+            color='rgb(90,90,90)'
+            >
+            5:00:00
+          </Text>
+        </VStack>
+        
         <Stack 
           align='center'
+          justify='space-around'
           w='100%'
           boxShadow='md'
           borderRadius='lg'
@@ -355,7 +359,7 @@ export default function Home() {
             </Stack>
           </HStack>
           <Hide below='sm'>
-            <HStack w='100%' position='relative' top='-30px' justify='space-around' h='calc(100% - 160px)'>
+            <HStack w='100%' position='relative' top='-30px' justify='space-between' h='calc(100% - 160px)'>
               <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
                 <HStack align='baseline'>
                   <Image src={logo} w='60px' position='relative' top='30px' />
@@ -363,7 +367,7 @@ export default function Home() {
                     Select All
                   </Checkbox>
                 </HStack>
-                <SimpleGrid templateColumns={{ xl: '1fr 1fr'}} spacing='0px' p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                <Grid templateColumns={{ xl: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
                   <Stack justify='start' align='center' spacing='1px'>
                     <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
                     <Text># 1235</Text>
@@ -372,7 +376,7 @@ export default function Home() {
                     <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
                     <Text># 1235</Text>
                   </Stack>
-                </SimpleGrid>
+                </Grid>
               </VStack>
               <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
                 <HStack align='baseline'>
@@ -381,12 +385,12 @@ export default function Home() {
                     Select All
                   </Checkbox>
                 </HStack>
-                <SimpleGrid templateColumns={{ xl: '1fr 1fr'}} spacing='0px' p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                <Grid templateColumns={{ xl: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
                   <Stack justify='start' align='center' spacing='5px'>
                     <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
                     <Text># 1235</Text>
                   </Stack>
-                </SimpleGrid>
+                </Grid>
               </VStack>
               <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
                 <HStack align='baseline'>
@@ -395,13 +399,13 @@ export default function Home() {
                     Select All
                   </Checkbox>
                 </HStack>
-                <SimpleGrid templateColumns={{ xl: '1fr 1fr'}} spacing='0px'  p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                <Grid templateColumns={{ xl: '1fr 1fr'}}  p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
                   <Stack justify='start' align='center' spacing='5px'>
                     <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix'  />
                     <Text># 1235</Text>
                   </Stack>
                   {/* Map through Peacefulist */}
-                </SimpleGrid>
+                </Grid>
               </VStack>
             </HStack>
           </Hide>
