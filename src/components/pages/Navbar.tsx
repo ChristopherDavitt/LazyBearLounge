@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
   Box,
   Flex,
@@ -17,15 +17,95 @@ import {
   CloseIcon
 } from '@chakra-ui/icons';
 import { Link as RouterLink } from 'react-router-dom';
+import { useWeb3React } from "@web3-react/core";
 
+import { networkParams } from '../helpers/networks'
+import { toHex, truncateAddress } from "../helpers/truncaters";
+import WalletModal from "../modals/WalletModal";
 import logo from '../assets/images/DiscordIcon.png'
-
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { connectors } from '../helpers/connectors';
 
 export default function Navbar() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selected, setSelected] = useState<string>('home');
+  const [connButtonText, setConnButtonText] = useState('Connect Wallet');
+  const [error, setError] = useState();
+  
+  const connected = useAppSelector((state) => state.connected)
+
+  useEffect(() => {
+      if (window.ethereum) {
+          window.ethereum.on('accountsChanged', connectWalletHandler)
+          window.ethereum.on('chainChanged', handleChainChange)
+
+          return () => {
+              window.ethereum.removeListener('accountsChanged', connectWalletHandler)
+              window.ethereum.removeListener('chainChanged', handleChainChange)
+          }
+      } 
+  },[])
+
+  const handleChainChange = () => {
+      window.location.reload()
+  }
+
+  const dispatch = useAppDispatch();
+  
+  const handleNetworkSwitch = async (networkName: PropertyKey) => {
+      setError(undefined);
+      await changeNetwork({ networkName, setError })
+  }
+  
+  const changeNetwork = async ({ networkName, setError }: 
+                              {networkName:PropertyKey,
+                                setError:React.Dispatch<React.SetStateAction<undefined>>}) => {
+      try {
+          if (!window.ethereum) throw new Error('No Crypto Wallet Found');
+          await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                  ...networkParams[networkName]
+              }]
+          })
+      } catch (err: any) {
+          setError(err.message);
+      }
+  }
+
+  const connectWalletHandler = () => {
+      if (!connected){
+          if (window.ethereum) {
+              // Trigger network switch
+              if (window.ethereum.networkVersion != 4) {
+                  window.ethereum.request({
+                      method: "wallet_switchEthereumChain",
+                      params: [{
+                          chainId: `0x${Number(4).toString(16)}`
+                      }]
+                    })
+                  handleNetworkSwitch('rinkeby')
+              } else {
+                  window.ethereum.request({method: 'eth_requestAccounts'})
+                  .then((result: string[]) => {
+                    setConnButtonText(truncateAddress(result[0]));
+                    dispatch({type: 'DISCONNECT_WALLET'})
+                    dispatch({type: 'LOADING'});
+                    dispatch({type: 'UPDATE_ADDRESS', payload: result[0]});
+                    dispatch({type: 'CONNECT_WALLET'})
+                  })
+              } 
+          } else {
+            setConnButtonText('Connect Wallet'); 
+            dispatch({type: 'DISCONNECT_WALLET'});
+          }
+      } else {
+        setConnButtonText('Connect Wallet'); 
+        dispatch({type: 'DISCONNECT_WALLET'});
+      }
+  }
 
   return (
     <>
@@ -97,8 +177,9 @@ export default function Navbar() {
             <Button
               w='140px'
               h='36px'
-              variant='outline'>
-              Connect Wallet
+              variant='outline'
+              onClick={() => connectWalletHandler()}>
+              {connButtonText}
             </Button>
             <IconButton
               size={'md'}
