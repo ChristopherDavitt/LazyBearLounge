@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import {
   Box,
   Flex,
@@ -29,8 +29,24 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 
 import logo from '../assets/images/DiscordIcon.png'
+import { useAppSelector } from '../store/hooks';
 
 export default function Staking() {
+  
+  const epoch = useAppSelector((state) => state.epochNum);
+  const epochTime = useAppSelector((state) => state.lastEpochTime);
+  const balance = useAppSelector((state) => state.balance)
+  const claimable = useAppSelector((state) => state.claimable);
+  const riverSupply = useAppSelector((state) => state.river);
+  const connected = useAppSelector((state) => state.connected);
+  const nfts = useAppSelector((state) => state.nfts);
+  const approvedNFT = useAppSelector((state) => state.approvedNFT);
+  const peaceful = useAppSelector((state) => state.peacefulStaked);
+  const hungry = useAppSelector((state) => state.hungryStaked);
+  const frenzy = useAppSelector((state) => state.frenzyStaked);
+
+
+
   return (
     <Stack
       overflowY='hidden'
@@ -77,7 +93,7 @@ export default function Staking() {
             fontSize='lg'
             fontWeight='light'
             color='rgb(90,90,90)'>
-            2
+            {epoch}
           </Text>
           <Heading 
             as='h3'
@@ -91,7 +107,7 @@ export default function Staking() {
             fontWeight='light'
             color='rgb(90,90,90)'
             >
-            1:00:00
+            Please Wait...
           </Text>
         </VStack>
         <Stack 
@@ -115,7 +131,7 @@ export default function Staking() {
             fontSize='lg'
             fontWeight='light'
             color='rgb(90,90,90)'>
-            271,820
+            {balance}
           </Text>
           <Heading 
             as='h3'
@@ -128,7 +144,7 @@ export default function Staking() {
             <Text 
               fontSize='md'
               color='rgb(60,60,60)'>
-              1312 mFISH
+              {claimable} mFISH
             </Text >
             <Button 
               h='30px'
@@ -165,7 +181,7 @@ export default function Staking() {
             bg={'white'}
             boxShadow='md'>
             <Stack  
-              w='40%'
+              w={String(riverSupply / 271828 * 100) + '%'}
               h='100%'
               borderLeftRadius='7px'
               bg={'red.200'}
@@ -177,7 +193,7 @@ export default function Staking() {
                 color='rgb(60,60,60)'
                 as='i'
                 >
-                50000
+                {riverSupply}
               </Text>
             </Stack>
           </Box>
@@ -347,16 +363,14 @@ export default function Staking() {
               </Stack>
             </Flex>
           </Flex>
-          <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
+          <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px' overflow='auto'>
             {/* Map through the list of unstaked NFTs */}
-            <Stack p='0.5rem 0.7rem' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-              <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-              <Text># 1235</Text>
-            </Stack>
-            <Stack justify='start' align='center' spacing='5px'>
-              <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-              <Text># 1235</Text>
-            </Stack>
+            {nfts.map((tokenId:number, index:number) => 
+              <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
+                <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                <Text>#{tokenId}</Text>
+              </Stack>
+            )}
           </HStack>
           <Hide below='sm'>
             <HStack w='100%' position='relative' top='-30px' justify='space-between' h='calc(100% - 160px)'>
@@ -368,14 +382,12 @@ export default function Staking() {
                   </Checkbox>
                 </HStack>
                 <Grid templateColumns={{ xl: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
-                  <Stack justify='start' align='center' spacing='1px'>
-                    <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-                    <Text># 1235</Text>
-                  </Stack>
-                  <Stack justify='start' align='center' spacing='5px'>
-                    <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-                    <Text># 1235</Text>
-                  </Stack>
+                  {peaceful.map((tokenId:number, index:number) => 
+                    <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
+                      <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                      <Text>#{tokenId}</Text>
+                    </Stack>
+                  )}
                 </Grid>
               </VStack>
               <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
@@ -386,10 +398,12 @@ export default function Staking() {
                   </Checkbox>
                 </HStack>
                 <Grid templateColumns={{ xl: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
-                  <Stack justify='start' align='center' spacing='5px'>
-                    <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-                    <Text># 1235</Text>
-                  </Stack>
+                  {hungry.map((tokenId:number, index:number) => 
+                    <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
+                      <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                      <Text>#{tokenId}</Text>
+                    </Stack>
+                  )}
                 </Grid>
               </VStack>
               <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
@@ -400,11 +414,12 @@ export default function Staking() {
                   </Checkbox>
                 </HStack>
                 <Grid templateColumns={{ xl: '1fr 1fr'}}  p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
-                  <Stack justify='start' align='center' spacing='5px'>
-                    <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix'  />
-                    <Text># 1235</Text>
-                  </Stack>
-                  {/* Map through Peacefulist */}
+                  {frenzy.map((tokenId:number, index:number) => 
+                    <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
+                      <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                      <Text>#{tokenId}</Text>
+                    </Stack>
+                  )}
                 </Grid>
               </VStack>
             </HStack>
@@ -435,15 +450,12 @@ export default function Staking() {
               </VStack>
             </Flex>
             <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
-              {/* Map through the list of unstaked NFTs */}
-              <Stack p='0.5rem 0.7rem' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-                <Text># 1235</Text>
-              </Stack>
-              <Stack justify='start' align='center' spacing='5px'>
-                <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-                <Text># 1235</Text>
-              </Stack>
+              {peaceful.map((tokenId:number, index:number) => 
+                <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
+                  <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                  <Text>#{tokenId}</Text>
+                </Stack>
+              )}
             </HStack>
             <Flex w='100%' align='center' justify='space-between'>
               <Heading as='h2'>Peaceful</Heading>
@@ -470,15 +482,12 @@ export default function Staking() {
               </VStack>
             </Flex>
             <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
-              {/* Map through the list of unstaked NFTs */}
-              <Stack p='0.5rem 0.7rem' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-                <Text># 1235</Text>
-              </Stack>
-              <Stack justify='start' align='center' spacing='5px'>
-                <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-                <Text># 1235</Text>
-              </Stack>
+              {hungry.map((tokenId:number, index:number) => 
+                <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
+                  <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                  <Text>#{tokenId}</Text>
+                </Stack>
+              )}
             </HStack>
             <Flex w='100%' align='center' justify='space-between'>
               <Heading as='h2'>Peaceful</Heading>
@@ -505,15 +514,12 @@ export default function Staking() {
               </VStack>
             </Flex>
             <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
-              {/* Map through the list of unstaked NFTs */}
-              <Stack p='0.5rem 0.7rem' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-                <Text># 1235</Text>
-              </Stack>
-              <Stack justify='start' align='center' spacing='5px'>
-                <Image bg='rgb(200,200,200)' borderRadius='7px' w='80px' src={logo} alt='pix' />
-                <Text># 1235</Text>
-              </Stack>
+              {frenzy.map((tokenId:number, index:number) => 
+                <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
+                  <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                  <Text>#{tokenId}</Text>
+                </Stack>
+              )}
             </HStack>
           </Show>
         </VStack>  

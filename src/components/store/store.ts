@@ -5,24 +5,44 @@ const defaultState = {
     peacefulStaked: [],
     hungryStaked: [],
     frenzyStaked: [],
-    approved: [],
+    approvedNFT: false,
+    approvedToken: 0,
     connected: false,
-    loading: false,
+    nftSupply: 0,
+    balance: 0,
+    claimable: 0,
+    epochNum: 0,
+    river: 0,
+    lastEpochTime: 0,
     address: '0x0000000000000000000000000000000000000000'
 }
 
 const reducer = (state = defaultState, action: any) => {
     switch (action.type) {
-        case "UPDATE_NFTS_AVAIL":
+        case "UPDATE_NFTS_UNSTAKED":
             return {...state, nfts: action.payload}
-        case "UPDATE_NFTS_AVAIL":
-            return {...state, nfts: action.payload}
-        case "UPDATE_NFTS_AVAIL":
-            return {...state, nfts: action.payload}
-        case "UPDATE_NFTS_AVAIL":
-            return {...state, nfts: action.payload}
-        case "UPDATE_APPROVALS":
-            return {...state, appoved: action.payload}
+        case "UPDATE_NFTS_PEACEFUL":
+            return {...state, peacefulStaked: action.payload}
+        case "UPDATE_NFTS_HUNGRY":
+            return {...state, hungryStaked: action.payload}
+        case "UPDATE_NFTS_FRENZY":
+            return {...state, frenzyStaked: action.payload}
+        case "UPDATE_NFTS_SUPPLY":
+            return {...state, nftSupply: action.payload}
+        case "UPDATE_APPROVAL_NFT":
+            return {...state, approvedNFT: action.payload}
+        case "UPDATE_APPROVAL_TOKEN":
+            return {...state, approvedToken: action.payload}
+        case "UPDATE_BALANCE":
+            return {...state, balance: action.payload}
+        case "UPDATE_CLAIMABLE":
+            return {...state, claimable: action.payload}
+        case "UPDATE_EPOCH":
+            return {...state, epochNum: action.payload}
+        case "UPDATE_EPOCH_TIME":
+            return {...state, lastEpochTime: action.payload}
+        case "UPDATE_RIVER":
+            return {...state, river: action.payload}
         case "CONNECT_WALLET":
             return {...state, connected: true};
         case "UPDATE_ADDRESS":

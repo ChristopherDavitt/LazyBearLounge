@@ -17,14 +17,14 @@ import {
   CloseIcon
 } from '@chakra-ui/icons';
 import { Link as RouterLink } from 'react-router-dom';
-import { useWeb3React } from "@web3-react/core";
+import { ethers } from 'ethers';
 
 import { networkParams } from '../helpers/networks'
-import { toHex, truncateAddress } from "../helpers/truncaters";
-import WalletModal from "../modals/WalletModal";
+import { truncateAddress } from "../helpers/truncaters";
 import logo from '../assets/images/DiscordIcon.png'
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { connectors } from '../helpers/connectors';
+import { getNFTData, getStaked,
+         getEpoch, getTokenInfo } from '../helpers/getValues';
 
 export default function Navbar() {
 
@@ -79,20 +79,20 @@ export default function Navbar() {
       if (!connected){
           if (window.ethereum) {
               // Trigger network switch
-              if (window.ethereum.networkVersion != 4) {
+              if (window.ethereum.networkVersion != 43113) {
                   window.ethereum.request({
                       method: "wallet_switchEthereumChain",
                       params: [{
-                          chainId: `0x${Number(4).toString(16)}`
+                          chainId: `0x${Number(43113).toString(16)}`
                       }]
                     })
-                  handleNetworkSwitch('rinkeby')
+                  handleNetworkSwitch('fuji')
               } else {
                   window.ethereum.request({method: 'eth_requestAccounts'})
                   .then((result: string[]) => {
                     setConnButtonText(truncateAddress(result[0]));
-                    dispatch({type: 'DISCONNECT_WALLET'})
                     dispatch({type: 'LOADING'});
+                    retrieveAll(result[0]);
                     dispatch({type: 'UPDATE_ADDRESS', payload: result[0]});
                     dispatch({type: 'CONNECT_WALLET'})
                   })
@@ -105,6 +105,43 @@ export default function Navbar() {
         setConnButtonText('Connect Wallet'); 
         dispatch({type: 'DISCONNECT_WALLET'});
       }
+  }
+
+  const retrieveAll = async (address: any) => {
+    await retrieveNFTData(address);
+    await retrieveTokenInfo(address);
+    await retrieveEpoch(address);
+    await retrieveStaked(address);
+    dispatch({type: 'FINISH_LOADING'})
+  }
+
+  const retrieveNFTData = async (address:any) => {
+    const [ nfts, supply, approved ] = await getNFTData(address);
+    console.log([ nfts, supply, approved ])
+    dispatch({type: 'UPDATE_NFTS_UNSTAKED', payload: nfts});
+    dispatch({type: 'UPDATE_SUPPLY', payload: supply});
+    dispatch({type: 'UPDATE_APPROVAL_NFTS', payload: approved});
+  }
+  const retrieveTokenInfo = async (address:any) => {
+    const [ balance, rewards ] = await getTokenInfo(address);
+    console.log([ balance, rewards ])
+    dispatch({type: 'UPDATE_BALANCE', payload: balance});
+    dispatch({type: 'UPDATE_CLAIMABLE', payload: rewards});
+  }
+  const retrieveEpoch = async (address:any) => {
+    const [epoch, epochTime, riverSupply] = await getEpoch(address);
+    console.log([epoch, epochTime, riverSupply])
+    dispatch({type: 'UPDATE_EPOCH', payload: epoch});
+    dispatch({type: 'UPDATE_EPOCH_TIME', payload: epochTime});
+    dispatch({type: 'UPDATE_RIVER', payload: riverSupply})
+  }
+  
+  const retrieveStaked = async (address:any) => {
+    const [ peaceful, hungry, frenzy ] = await getStaked(address);
+    console.log([peaceful, hungry, frenzy])
+    dispatch({type: 'UPDATE_NFTS_PEACEFUL', payload: peaceful});
+    dispatch({type: 'UPDATE_NFTS_HUNGRY', payload: hungry});
+    dispatch({type: 'UPDATE_NFTS_FRENZY', payload: frenzy});
   }
 
   return (

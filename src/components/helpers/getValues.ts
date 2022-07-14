@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { stakingABI, nftABI } from './abis';
 import {staking, nft} from './contracts';
 
@@ -12,84 +13,73 @@ export const getNFTData = async (address:any) => {
     try {
         const nfts = await nftContract.walletOfOwner(address);
         const nftsParsed:number[] = [];
-        nfts.forEach((e:any) => nftsParsed.push(parseInt(e._hex, 16)))
+        nfts.forEach((e:any) => nftsParsed.push(parseInt(e._hex, 16)));
+        const supply = await nftContract.totalSupply();
+        const parsedSupply = parseInt(supply._hex, 16)
+        const approved = await nftContract.isApprovedForAll(address, staking);
+        return [nftsParsed, parsedSupply, approved];
     } catch (error) {
-        console.log('Gettings NFT Unstaked ' + error)
-        return []
-    }
-
-    // getting Approvals for Staking Contract
-    try {
-        const approved = await nftContract.isApprovedForAll(address);
-    } catch (error) {
-        console.log('Gettings Approvals ' + error)
+        console.log('Gettings NFT data ' + error)
         return []
     }
 }
 
-export const nftSupply = async( address:any) => {
-    const ethers = require('ethers')
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
-    const nftContract = new ethers.Contract(nft, nftABI, provider)
-
-    // getting NFTs Unstaked
-    try {
-        const supply = await nftContract.totalSupply(address);
-        return (parseInt(supply._hex, 16))
-    } catch (error) {
-        console.log('Gettings Current Supply' + error)
-        return []
-    }
-}
-
-export const stakingInfo = async( address:any) => {
+export const getTokenInfo = async( address:any) => {
     const ethers = require('ethers')
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const stakingContract = new ethers.Contract(staking, stakingABI, provider)
 
-   
     try {
         const balance = await stakingContract.balanceOf(address);
         const parsedBalance = parseInt(balance._hex, 16);
+        const rewards = await stakingContract.calculateRewards(address);
+        const parsedRewards = parseInt(rewards._hex, 16);
+        const allowance = await stakingContract.allowance(address, nft);
+        const parsedAllowance = parseInt(allowance._hex, 16);
+        return [parsedBalance, parsedRewards, parsedAllowance]
     } catch (error) {
         console.log('Gettings Balance' + error)
         return []
     }
+}
 
-   
+export const getEpoch = async(address:any) => {
+    const ethers = require('ethers')
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const stakingContract = new ethers.Contract(staking, stakingABI, provider)
     try {
-        const unclaimedRewards = await stakingContract.balanceOf(address);
-        const parsedUnclaimedRewards = parseInt(unclaimedRewards._hex, 16);
+        const epochNum = await stakingContract.epochNum();
+        const parsedEpochNum = parseInt(epochNum._hex, 16);
+        const epochTime = await stakingContract.lastEpochTime();
+        const parsedEpochTime = parseInt(epochTime._hex, 16);
+        const riverSupply = await stakingContract.supply();
+        const parsedRiverSupply = parseInt(riverSupply._hex, 16);
+        return [parsedEpochNum, parsedEpochTime, parsedRiverSupply];
     } catch (error) {
-        console.log('Gettings Unclaimed Rewards' + error)
+        console.log('Getting Epoch Stuff' + error)
         return []
     }
+}
 
-    // Peaceful Bears
+export const getStaked = async(address:any) => {
+    const ethers = require('ethers')
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const stakingContract = new ethers.Contract(staking, stakingABI, provider)
+    // Staked Bears
     try {
         const stakedBearsPeaceful = await stakingContract.getPeacefulList(address);
         const stakedBearsPeacefulParsed : number[] = [];
-        stakedBearsPeaceful.forEach((e:any) => stakedBearsPeacefulParsed.push(parseInt(e._hex, 16)))
-    } catch (error) {
-        console.log('Gettings Peaceful Bears' + error)
-        return []
-    }
-    // Hungry Bears
-    try {
+        stakedBearsPeaceful.forEach((e:any) => stakedBearsPeacefulParsed.push(parseInt(e._hex, 16)));
         const stakedBearsHungry = await stakingContract.getHungryList(address);
         const stakedBearsHungryParsed : number[] = [];
-        stakedBearsHungry.forEach((e:any) => stakedBearsHungryParsed.push(parseInt(e._hex, 16)))
-    } catch (error) {
-        console.log('Gettings Hungry Bears' + error)
-        return []
-    }
-    // Frenzy Bears
-    try {
+        stakedBearsHungry.forEach((e:any) => stakedBearsHungryParsed.push(parseInt(e._hex, 16)));
         const stakedBearsFrenzy = await stakingContract.getFrenzyList(address);
         const stakedBearsFrenzyParsed : number[] = [];
         stakedBearsFrenzy.forEach((e:any) => stakedBearsFrenzyParsed.push(parseInt(e._hex, 16)))
+        return [stakedBearsPeacefulParsed, stakedBearsHungryParsed, stakedBearsFrenzyParsed]
+
     } catch (error) {
-        console.log('Gettings Frenzy Bears' + error)
+        console.log('Getting Bears Staked' + error)
         return []
     }
 }
