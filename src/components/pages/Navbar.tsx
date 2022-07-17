@@ -1,14 +1,12 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Flex,
   Image,
-  Text,
   IconButton,
   Button,
   Stack,
   Link,
-  useColorModeValue,
   useDisclosure,
   ScaleFade,
 } from '@chakra-ui/react';
@@ -95,6 +93,7 @@ export default function Navbar() {
                     retrieveAll(result[0]);
                     dispatch({type: 'UPDATE_ADDRESS', payload: result[0]});
                     dispatch({type: 'CONNECT_WALLET'})
+                    
                   })
               } 
           } else {
@@ -113,6 +112,10 @@ export default function Navbar() {
     await retrieveEpoch(address);
     await retrieveStaked(address);
     dispatch({type: 'FINISH_LOADING'})
+    window.ethereum.request({method: 'eth_getBalance', params: [address, 'latest']})
+    .then((balance: any) => {
+      dispatch({type: "UPDATE_AVAX", payload: Number(ethers.utils.formatEther(balance)).toFixed(4)})
+    })
   }
 
   const retrieveNFTData = async (address:any) => {

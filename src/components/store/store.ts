@@ -10,6 +10,7 @@ const defaultState = {
     connected: false,
     nftSupply: 0,
     balance: 0,
+    avax: 0,
     claimable: 0,
     epochNum: 0,
     river: 0,
@@ -43,6 +44,8 @@ const reducer = (state = defaultState, action: any) => {
             return {...state, lastEpochTime: action.payload}
         case "UPDATE_RIVER":
             return {...state, river: action.payload}
+        case "UPDATE_AVAX":
+            return {...state, avax: action.payload}
         case "CONNECT_WALLET":
             return {...state, connected: true};
         case "UPDATE_ADDRESS":

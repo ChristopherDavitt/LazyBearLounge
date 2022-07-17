@@ -20,6 +20,7 @@ import {
   Grid,
   Hide,
   Show,
+  Skeleton,
   
 } from '@chakra-ui/react';
 import {
@@ -53,22 +54,17 @@ export default function Staking() {
       align='center'
       justify='center'
       p={4}
-      gap='2rem'
+      gap='1rem'
       bg='white'
       minH={{md: '620px'}}
-      h={{md: 'calc(100vh - 90px)'}}
       m='auto'
-      direction={{xsm:'column', md:'row'}}
+      direction='column'
       >
       <Grid
-        minW={{md: '220px', xsm: 'calc(100vw - 40px)'}}
-        w={{md: '22vw', xsm: 'calc(100vw - 60px)'}}
-        maxW={{md: '280px', xsm: 'calc(100vw - 60px)'}}
-        templateColumns={{sm: '1fr 1fr', md: '1fr', lg:'1fr', xl: '1fr'}}
-        minH={{md: '600px'}}
+        w='calc(100vw - 40px)'
+        maxW='1200px'
+        templateColumns={{sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr', lg:'1fr 1fr 1fr 1fr', xl: '1fr 1fr 1fr 1fr'}}
         gap='1rem'
-        h={{md: 'calc(100vh - 150px)'}}
-        maxH={{md: '700px'}}
         overflow='hidden'
         pb='10px'
         >
@@ -89,12 +85,16 @@ export default function Staking() {
             >
             Current Epoch
           </Heading>
-          <Text
-            fontSize='lg'
-            fontWeight='light'
-            color='rgb(90,90,90)'>
-            {epoch}
-          </Text>
+          <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}> 
+            <Text
+              
+              fontSize='lg'
+              fontWeight='light'
+              color='rgb(90,90,90)'
+              align='center'>
+              {epoch}
+            </Text>
+          </Skeleton>
           <Heading 
             as='h3'
             size='lg'
@@ -102,13 +102,16 @@ export default function Staking() {
             >
             Next Epoch
           </Heading>
-          <Text
-            fontSize='lg'
-            fontWeight='light'
-            color='rgb(90,90,90)'
-            >
-            Please Wait...
-          </Text>
+          <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
+            <Text
+              fontSize='lg'
+              fontWeight='light'
+              color='rgb(90,90,90)'
+              align='center'
+              >
+              Please Wait...
+            </Text>
+          </Skeleton>
         </VStack>
         <Stack 
           align='center'
@@ -127,12 +130,15 @@ export default function Staking() {
             color='rgb(60,60,60)'>
             Balance
           </Heading>
-          <Text
-            fontSize='lg'
-            fontWeight='light'
-            color='rgb(90,90,90)'>
-            {balance}
-          </Text>
+          <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
+            <Text
+              fontSize='lg'
+              fontWeight='light'
+              color='rgb(90,90,90)'
+              align='center'>
+              {balance}
+            </Text>
+          </Skeleton>
           <Heading 
             as='h3'
             size='lg'
@@ -141,17 +147,22 @@ export default function Staking() {
             Claim Rewards
           </Heading>
           <HStack align='center' justify='space-between'>
-            <Text 
-              fontSize='md'
-              color='rgb(60,60,60)'>
-              {claimable} mFISH
-            </Text >
+            <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
+              <Text 
+                fontSize='md'
+                color='rgb(60,60,60)'
+                align='center'
+                >
+                {claimable} mFISH
+              </Text >
+            </Skeleton>
             <Button 
               h='30px'
               variant={'outline'}
               bg='white'
               boxShadow={'md'}
-              _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+              _hover={{backgroundColor: 'rgb(245,245,245)'}}
+              disabled={!connected}>
               Claim
             </Button>
           </HStack>
@@ -205,13 +216,16 @@ export default function Staking() {
             >
             Resupply
           </Heading>
-          <Text
-            fontSize='lg'
-            fontWeight='light'
-            color='rgb(90,90,90)'
-            >
-            5:00:00
-          </Text>
+          <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
+            <Text
+              fontSize='lg'
+              fontWeight='light'
+              color='rgb(90,90,90)'
+              align='center'
+              >
+              5:00:00
+            </Text>
+          </Skeleton>
         </VStack>
         
         <Stack 
@@ -244,10 +258,12 @@ export default function Staking() {
                 Peaceful
               </Text>
             </Flex>
-            <Text
-              fontWeight='medium'>
-              1213
-            </Text>
+            <Skeleton h='20px' w='50%' fadeDuration={1} isLoaded={connected}>
+              <Text align='center'
+                fontWeight='medium'>
+                1213
+              </Text>
+            </Skeleton>
           </Flex>
           <Flex
             justify='space-between'
@@ -263,10 +279,12 @@ export default function Staking() {
                 Hungry
               </Text>
             </Flex>
-            <Text
-              fontWeight='medium'>
-              1213
-            </Text>
+            <Skeleton h='20px' w='50%' fadeDuration={1} isLoaded={connected}>
+              <Text
+                fontWeight='medium'>
+                1213
+              </Text>
+            </Skeleton>
           </Flex>
           <Flex
             justify='space-between'
@@ -282,19 +300,21 @@ export default function Staking() {
                 Frenzy
               </Text>
             </Flex>
-            <Text
-              fontWeight='medium'>
-              1213
-            </Text>
+            <Skeleton h='20px' w='50%' fadeDuration={1} isLoaded={connected}>
+              <Text
+                fontWeight='medium'>
+                1213
+              </Text>
+            </Skeleton>
           </Flex>
         </Stack>
       </Grid>
       <Box
-        w={{md: 'calc(100vw - 300px)', xsm: 'calc(100vw - 40px)'}}
+        w='calc(100vw - 40px)'
         maxW='1200px' 
-        minH={{sm: '600px'}}
-        h={{xsm: '920px',sm: 'calc(100vh - 150px)'}}
-        maxH={{sm: '700px'}}
+        minH='640px'
+        h={{xsm: '970px', sm: 'calc(100vh - 150px)'}}
+        maxH={{sm: '730px'}}
         borderRadius='lg'
         p='0.5rem 1rem'
         bg='rgb(240,240,240)'
@@ -305,6 +325,7 @@ export default function Staking() {
           minH='600px'
           h='100%'
           maxH='700px'
+          spacing='1rem'
           >
           <Flex 
             justify='space-between'  
@@ -320,27 +341,25 @@ export default function Staking() {
                   Select All
                 </Checkbox>
               </Hide>
-             
             </Flex>
+            <Hide above='sm'>
+              <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
+                All
+              </Checkbox>
+            </Hide>
             <Flex gap='5px' align='center'>
-              <VStack>
-                <Hide above='sm'>
-                  <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
-                    All
-                  </Checkbox>
-                </Hide>
-                
+              <VStack>          
                 <Text fontWeight='400'>
                   Stake:
                 </Text>
               </VStack>
-              
-              <Stack direction={{xsm: 'column', lg: 'row'}}>
+              <Stack direction={{xsm: 'column', md: 'row'}}>
                 <Button 
                   h='30px'
                   variant={'outline'}
                   bg='white'
                   boxShadow={'md'}
+                  disabled={!connected}
                   _hover={{backgroundColor: 'rgb(245,245,245)'}}>
                   Peaceful
                 </Button>
@@ -349,6 +368,7 @@ export default function Staking() {
                   variant={'outline'}
                   bg='white'
                   boxShadow={'md'}
+                  disabled={!connected}
                   _hover={{backgroundColor: 'rgb(245,245,245)'}}>
                   Hungry
                 </Button>
@@ -357,66 +377,137 @@ export default function Staking() {
                   variant={'outline'}
                   bg='white'
                   boxShadow={'md'}
+                  disabled={!connected}
                   _hover={{backgroundColor: 'rgb(245,245,245)'}}>
                   Frenzy
                 </Button>
               </Stack>
             </Flex>
           </Flex>
-          <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px' overflow='auto'>
+          <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
             {/* Map through the list of unstaked NFTs */}
             {nfts.map((tokenId:number, index:number) => 
-              <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
-                <Text>#{tokenId}</Text>
+              <Stack key={tokenId} minW='100px' border='solid 1px rgb(240,240,240)' bg={connected ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                <Text fontWeight={'bold'} >#{tokenId}</Text>
               </Stack>
             )}
           </HStack>
           <Hide below='sm'>
-            <HStack w='100%' position='relative' top='-30px' justify='space-between' h='calc(100% - 160px)'>
-              <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
-                <HStack align='baseline'>
-                  <Image src={logo} w='60px' position='relative' top='30px' />
+            <HStack w='100%' justify='space-between' h='calc(100% - 160px)'>
+              <VStack w={{md: '160px', lg: '280px'}} h='100%'>
+                <HStack w='100%' justify='space-between' align='baseline'>
+                  <Heading size='lg'>Peaceful</Heading>
                   <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
-                    Select All
+                    All
                   </Checkbox>
                 </HStack>
-                <Grid templateColumns={{ xl: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                <HStack justify='space-between' w='100%'>
+                  <Text>Switch:</Text>
+                  <Stack direction={{xsm: 'column', lg: 'row'}}>
+                    <Button 
+                      h='30px'
+                      variant={'outline'}
+                      bg='white'
+                      boxShadow={'md'}
+                      disabled={!connected}
+                      _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                      Hungry
+                    </Button>
+                    <Button 
+                      h='30px'
+                      variant={'outline'}
+                      bg='white'
+                      boxShadow={'md'}
+                      disabled={!connected}
+                      _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                      Frenzy
+                    </Button>
+                  </Stack>
+                </HStack>
+                <Grid templateColumns={{ lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
                   {peaceful.map((tokenId:number, index:number) => 
                     <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                      <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                      <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
                       <Text>#{tokenId}</Text>
                     </Stack>
                   )}
                 </Grid>
               </VStack>
-              <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
-                <HStack align='baseline'>
-                  <Image src={logo} w='60px' position='relative' top='30px'/>
+              <VStack w={{md: '160px', lg: '280px'}} h='100%'>
+                <HStack w='100%' justify='space-between' align='baseline'>
+                  <Heading size='lg'>Hungry</Heading>
                   <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
-                    Select All
+                    All
                   </Checkbox>
+                  
                 </HStack>
-                <Grid templateColumns={{ xl: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                <HStack justify='space-between' w='100%'>
+                  <Text>Switch:</Text>
+                  <Stack direction={{xsm: 'column', lg: 'row'}}>
+                    <Button 
+                      h='30px'
+                      variant={'outline'}
+                      bg='white'
+                      boxShadow={'md'}
+                      disabled={!connected}
+                      _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                      Peaceful
+                    </Button>
+                    <Button 
+                      h='30px'
+                      variant={'outline'}
+                      bg='white'
+                      boxShadow={'md'}
+                      disabled={!connected}
+                      _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                      Frenzy
+                    </Button>
+                  </Stack>
+                </HStack>
+                <Grid templateColumns={{lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
                   {hungry.map((tokenId:number, index:number) => 
                     <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                      <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                      <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
                       <Text>#{tokenId}</Text>
                     </Stack>
                   )}
                 </Grid>
               </VStack>
-              <VStack w={{lg: '160px', xl: '280px'}} h='100%'>
-                <HStack align='baseline'>
-                  <Image src={logo} w='60px' position='relative' top='30px' />
+              <VStack w={{md: '160px', lg: '280px'}} h='100%'>
+                <HStack w='100%' justify='space-between' align='baseline'>
+                  <Heading size='lg'>Frenzy</Heading>
                   <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
-                    Select All
+                    All
                   </Checkbox>
                 </HStack>
-                <Grid templateColumns={{ xl: '1fr 1fr'}}  p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                <HStack justify='space-between' w='100%'>
+                  <Text>Switch:</Text>
+                  <Stack direction={{xsm: 'column', lg: 'row'}}>
+                    <Button 
+                      h='30px'
+                      variant={'outline'}
+                      bg='white'
+                      boxShadow={'md'}
+                      disabled={!connected}
+                      _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                      Peaceful
+                    </Button>
+                    <Button 
+                      h='30px'
+                      variant={'outline'}
+                      bg='white'
+                      boxShadow={'md'}
+                      disabled={!connected}
+                      _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                      Hungry
+                    </Button>
+                  </Stack>
+                </HStack>
+                <Grid templateColumns={{ lg: '1fr 1fr'}}  p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
                   {frenzy.map((tokenId:number, index:number) => 
                     <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                      <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                      <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
                       <Text>#{tokenId}</Text>
                     </Stack>
                   )}
@@ -430,93 +521,120 @@ export default function Staking() {
               <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
                 All
               </Checkbox>
-              <VStack>
-                <Button 
-                  h='30px'
-                  variant={'outline'}
-                  bg='white'
-                  boxShadow={'md'}
-                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
-                  Hungry
-                </Button>
-                <Button 
-                  h='30px'
-                  variant={'outline'}
-                  bg='white'
-                  boxShadow={'md'}
-                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
-                  Frenzy
-                </Button>
-              </VStack>
+              <Flex gap='5px' align='center'>
+                <VStack>          
+                  <Text fontWeight='400'>
+                    Switch:
+                  </Text>
+                </VStack>
+                <Stack direction={{xsm: 'column', md: 'row'}}>
+                  <Button 
+                    h='30px'
+                    variant={'outline'}
+                    bg='white'
+                    boxShadow={'md'}
+                    disabled={!connected}
+                    _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                    Hungry
+                  </Button>
+                  <Button 
+                    h='30px'
+                    variant={'outline'}
+                    bg='white'
+                    boxShadow={'md'}
+                    disabled={!connected}
+                    _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                    Frenzy
+                  </Button>
+                </Stack>
+              </Flex>
             </Flex>
             <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
               {peaceful.map((tokenId:number, index:number) => 
                 <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                  <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                  <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
                   <Text>#{tokenId}</Text>
                 </Stack>
               )}
             </HStack>
             <Flex w='100%' align='center' justify='space-between'>
-              <Heading as='h2'>Peaceful</Heading>
+              <Heading as='h2'>Hungry</Heading>
               <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
                 All
               </Checkbox>
-              <VStack>
-                <Button 
-                  h='30px'
-                  variant={'outline'}
-                  bg='white'
-                  boxShadow={'md'}
-                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
-                  Hungry
-                </Button>
-                <Button 
-                  h='30px'
-                  variant={'outline'}
-                  bg='white'
-                  boxShadow={'md'}
-                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
-                  Frenzy
-                </Button>
-              </VStack>
+              <Flex gap='5px' align='center'>
+                <VStack>          
+                  <Text fontWeight='400'>
+                    Switch:
+                  </Text>
+                </VStack>
+                <Stack direction={{xsm: 'column', md: 'row'}}>
+                  <Button 
+                    h='30px'
+                    variant={'outline'}
+                    bg='white'
+                    boxShadow={'md'}
+                    disabled={!connected}
+                    _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                    Peaceful
+                  </Button>
+                  <Button 
+                    h='30px'
+                    variant={'outline'}
+                    bg='white'
+                    boxShadow={'md'}
+                    disabled={!connected}
+                    _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                    Frenzy
+                  </Button>
+                </Stack>
+              </Flex>
             </Flex>
             <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
               {hungry.map((tokenId:number, index:number) => 
                 <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                  <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                  <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
                   <Text>#{tokenId}</Text>
                 </Stack>
               )}
             </HStack>
             <Flex w='100%' align='center' justify='space-between'>
-              <Heading as='h2'>Peaceful</Heading>
+              <Heading as='h2'>Frenzy</Heading>
               <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
                 All
               </Checkbox>
-              <VStack>
-                <Button 
-                  h='30px'
-                  variant={'outline'}
-                  bg='white'
-                  boxShadow={'md'}
-                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
-                  Hungry
-                </Button>
-                <Button 
-                  h='30px'
-                  variant={'outline'}
-                  bg='white'
-                  boxShadow={'md'}
-                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
-                  Frenzy
-                </Button>
-              </VStack>
+              <Flex gap='5px' align='center'>
+                <VStack>          
+                  <Text fontWeight='400'>
+                    Switch:
+                  </Text>
+                </VStack>
+                <Stack direction={{xsm: 'column', md: 'row'}}>
+                  <Button 
+                    h='30px'
+                    variant={'outline'}
+                    bg='white'
+                    boxShadow={'md'}
+                    disabled={!connected}
+                    _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                    Peaceful
+                  </Button>
+                  <Button 
+                    h='30px'
+                    variant={'outline'}
+                    bg='white'
+                    boxShadow={'md'}
+                    disabled={!connected}
+                    _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                    Hungry
+                  </Button>
+                </Stack>
+              </Flex>
             </Flex>
             <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
               {frenzy.map((tokenId:number, index:number) => 
                 <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                  <Image borderRadius='7px' w='100%' src={`https://gateway.pinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
+                  <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
                   <Text>#{tokenId}</Text>
                 </Stack>
               )}
