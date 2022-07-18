@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Flex,
@@ -17,19 +17,21 @@ import {
   
 } from '@chakra-ui/react';
 import { useToast } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
+import { ethers } from 'ethers';
 
 import { stakingABI, nftABI } from '../helpers/abis';
+import { getStaked, getNFTData } from '../helpers/getValues';
 import {staking, nft} from '../helpers/contracts';
 import { useAppSelector } from '../store/hooks';
 import peacefulIcon from '../assets/images/PeacefulIcon.png';
 import hungryIcon from '../assets/images/HungryIcon.png';
 import frenzyIcon from '../assets/images/FrenzyIcon.png';
+import { useDispatch } from 'react-redux';
 
 export default function Staking() {
-  
   const epoch = useAppSelector((state) => state.epochNum);
   const epochTime = useAppSelector((state) => state.lastEpochTime);
+  const address = useAppSelector((state) => state.address)
   const balance = useAppSelector((state) => state.balance)
   const claimable = useAppSelector((state) => state.claimable);
   const riverSupply = useAppSelector((state) => state.river);
@@ -39,8 +41,62 @@ export default function Staking() {
   const peaceful = useAppSelector((state) => state.peacefulStaked);
   const hungry = useAppSelector((state) => state.hungryStaked);
   const frenzy = useAppSelector((state) => state.frenzyStaked);
+  const peacefulNum = useAppSelector((state) => state.peacefulNum);
+  const hungryNum = useAppSelector((state) => state.hungryNum);
+  const frenzyNum = useAppSelector((state) => state.frenzyNum);
+
   const toast = useToast();
+  const dispatch = useDispatch();
+
+  const [nftBool, setNftBool] = useState<boolean[]>([]);
+  const [peacefulBool, setPeacefulBool] = useState<boolean[]>([]);
+  const [hungryBool, setHungryBool] = useState<boolean[]>([]);
+  const [frenzyBool, setFrenzyBool] = useState<boolean[]>([]);
+
+
+  useEffect(() => {
+    const nftBoolArray = new Array(nfts.length).fill(false);
+    const peacefulBoolArray = new Array(peaceful.length).fill(false);
+    const hungryBoolArray = new Array(hungry.length).fill(false);
+    const frenzyBoolArray = new Array(frenzy.length).fill(false);
+    setNftBool(nftBoolArray);
+    setPeacefulBool(peacefulBoolArray);
+    setHungryBool(hungryBoolArray);
+    setFrenzyBool(frenzyBoolArray);
+    console.log(nftBoolArray)
+  }, [peaceful, hungry, frenzy, nfts])
   
+  const clickNftUnstaked = (_index: number) => {
+    let oldNft = [...nftBool];
+    oldNft[_index] = !oldNft[_index];
+    setNftBool(oldNft);
+  }
+
+  const selectAllUnstaked = (check: boolean) => {
+    const nftBoolArray = new Array(nfts.length).fill(check);
+    setNftBool(nftBoolArray);
+  }
+
+  const stakeSelected = (pool: number) => {
+    const newArray: number[] = [];
+    for (let i = 0; i < nfts.length; i++) {
+      if (nftBool[i]) {
+        newArray.push(nfts[i])
+      }
+    }
+    if (newArray.length === 0) {
+      toast({
+        title: 'No Bears Selected',
+        description: 'Please Select NFTs To Stake',
+        status: 'warning',
+        position: 'top-right',
+        isClosable: true
+      })
+    } else {
+      stake(newArray, pool)
+    }
+  }
+
   const changeTheEpoch = async() => {
     const ethers = require('ethers')
     const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -50,27 +106,28 @@ export default function Staking() {
     try {
         const tx = await stakingContract.changeEpoch();
         toast({
-            title: 'Transaction Sent',
-            description: 'Changing Epoch.',
-            status: 'info',
-            position: 'top-right',
-            isClosable: true
+          title: 'Transaction Sent',
+          description: 'Changing Epoch.',
+          status: 'info',
+          position: 'top-right',
+          isClosable: true
         })
         await tx.wait()
         toast({
-            title: 'Transaction Success',
-            description: 'Thank you for changing the Epoch :)',
-            status: 'success',
-            position: 'top-right',
-            isClosable: true
+          title: 'Transaction Success',
+          description: 'Thank you for changing the Epoch :)',
+          status: 'success',
+          position: 'top-right',
+          isClosable: true
         }) 
-    } catch (error) {
+    } catch (error:any) {
+      if (error.code != 4001)
         toast({
-            title: 'Transaction Failed',
-            description: 'TXN Failed...',
-            status: 'error',
-            position: 'top-right',
-            isClosable: true
+          title: 'Transaction Failed',
+          description: 'TXN Failed...',
+          status: 'error',
+          position: 'top-right',
+          isClosable: true
         })
         console.log(error)
     }
@@ -83,29 +140,43 @@ export default function Staking() {
     const stakingContract = new ethers.Contract(staking, stakingABI, signer)
     // Staked Bears
     try {
-        const tx = await stakingContract.changePool(nfts, poolNum);
+        const tx = await stakingContract.stakeLoop(nfts, poolNum);
         toast({
-            title: 'Transaction Sent',
-            description: 'Changing staking pools.',
-            status: 'info',
-            position: 'top-right',
-            isClosable: true
+          title: 'Transaction Sent',
+          description: 'Changing staking pools.',
+          status: 'info',
+          position: 'top-right',
+          isClosable: true
         })
         await tx.wait()
         toast({
-            title: 'Transaction Success',
-            description: 'Staking pools updated.',
-            status: 'success',
-            position: 'top-right',
-            isClosable: true
-        }) 
-    } catch (error) {
+          title: 'Transaction Success',
+          description: 'Staking pools updated.',
+          status: 'success',
+          position: 'top-right',
+          isClosable: true
+        });
+        console.log('Updating State')
+        const [ nftList, supply, approved ] = await getNFTData(address);
+        dispatch({type: 'UPDATE_NFTS_UNSTAKED', payload: nftList});
+        dispatch({type: 'UPDATE_NFTS_SUPPLY', payload: supply});
+        dispatch({type: 'UPDATE_APPROVAL_NFTS', payload: approved});
+        const [ peaceful, hungry, frenzy, pNum, hNum, fNum ] = await getStaked(address);
+        dispatch({type: 'UPDATE_NFTS_PEACEFUL', payload: peaceful});
+        dispatch({type: 'UPDATE_NFTS_HUNGRY', payload: hungry});
+        dispatch({type: 'UPDATE_NFTS_FRENZY', payload: frenzy});
+        dispatch({type: 'UPDATE_PEACEFUL_NUM', payload: pNum});
+        dispatch({type: 'UPDATE_HUNGRY_NUM', payload: hNum});
+        dispatch({type: 'UPDATE_FRENZY_NUM', payload: fNum});
+
+    } catch (error:any) {
+      if (error.code != 4001)
         toast({
-            title: 'Transaction Failed',
-            description: 'TXN Failed. If problem persists please notify.',
-            status: 'error',
-            position: 'top-right',
-            isClosable: true
+          title: 'Transaction Failed',
+          description: 'TXN Failed. If problem persists please notify.',
+          status: 'error',
+          position: 'top-right',
+          isClosable: true
         })
         console.log(error)
     }
@@ -134,7 +205,9 @@ export default function Staking() {
             position: 'top-right',
             isClosable: true
         }) 
-    } catch (error) {
+        dispatch({type:'UPDATE_APPROVAL_NFTS', payload: true})
+    } catch (error:any) {
+      if (error.code != 4001)
         toast({
             title: 'Transaction Failed',
             description: 'TXN Failed. If problem persists please notify.',
@@ -168,8 +241,16 @@ export default function Staking() {
             status: 'success',
             position: 'top-right',
             isClosable: true
-        }) 
-    } catch (error) {
+        });
+        const [ peaceful, hungry, frenzy, pNum, hNum, fNum ] = await getStaked(address);
+        dispatch({type: 'UPDATE_NFTS_PEACEFUL', payload: peaceful});
+        dispatch({type: 'UPDATE_NFTS_HUNGRY', payload: hungry});
+        dispatch({type: 'UPDATE_NFTS_FRENZY', payload: frenzy});
+        dispatch({type: 'UPDATE_PEACEFUL_NUM', payload: pNum});
+        dispatch({type: 'UPDATE_HUNGRY_NUM', payload: hNum});
+        dispatch({type: 'UPDATE_FRENZY_NUM', payload: fNum});
+    } catch (error:any) {
+      if (error.code != 4001)
         toast({
             title: 'Transaction Failed',
             description: 'TXN Failed. If problem persists please notify.',
@@ -187,23 +268,24 @@ export default function Staking() {
     const stakingContract = new ethers.Contract(staking, stakingABI, signer)
     // Staked Bears
     try {
-        const tx = await stakingContract.claimRewards();
-        toast({
-            title: 'Transaction Sent',
-            description: 'Collecting Rewards.',
-            status: 'info',
-            position: 'top-right',
-            isClosable: true
-        })
-        await tx.wait()
-        toast({
-            title: 'Transaction Success',
-            description: 'Rewards Claimed.',
-            status: 'success',
-            position: 'top-right',
-            isClosable: true
-        }) 
-    } catch (error) {
+      const tx = await stakingContract.claimRewards();
+      toast({
+        title: 'Transaction Sent',
+        description: 'Collecting Rewards.',
+        status: 'info',
+        position: 'top-right',
+        isClosable: true
+      })
+      await tx.wait()
+      toast({
+        title: 'Transaction Success',
+        description: 'Rewards Claimed.',
+        status: 'success',
+        position: 'top-right',
+        isClosable: true
+      }) 
+    } catch (error:any) {
+      if (error.code != 4001)
         toast({
             title: 'Transaction Failed',
             description: 'TXN Failed. If problem persists please notify.',
@@ -337,6 +419,7 @@ export default function Staking() {
           align='center'
           justify='space-around'
           w='100%'
+          minH='150px'
           boxShadow={'md'}
           borderRadius='lg'
           spacing={0}
@@ -374,36 +457,9 @@ export default function Staking() {
               </Text>
             </Stack>
           </Box>
-          {approvedNFT &&
-            <VStack 
-              align='center'
-              justify='space-around'
-              w='100%'
-              boxShadow={'md'}
-              borderRadius='lg'
-              spacing={0}
-              p='0.5rem'>
-              <Button 
-                h='30px'
-                variant={'outline'}
-                bg='white'
-                boxShadow={'md'}
-                disabled={!connected}
-                _hover={{backgroundColor: 'rgb(245,245,245)'}}>
-                Approve Staking
-              </Button>
-              <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
-                <Text
-                  fontSize='md'
-                  fontWeight='light'
-                  color='rgb(200,200,200)'
-                  align='center'
-                  >
-                  Approve staking contract to earn FISH
-                </Text>
-              </Skeleton>
-            </VStack>
-          }
+          <Text align='center' color='gray.700' fontSize='sm'>
+            The river supply increases by ~16 % every epoch. Carrying Capacity is 271828 Fish.
+          </Text>
         </VStack>
         
         <Stack 
@@ -437,7 +493,7 @@ export default function Staking() {
               <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
                 <Text align='center'
                   fontWeight='medium'>
-                  {peaceful}
+                  {peacefulNum}
                 </Text>
               </Skeleton>
             </VStack>
@@ -457,7 +513,7 @@ export default function Staking() {
               <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
                 <Text align='center'
                   fontWeight='medium'>
-                  {hungry}
+                  {hungryNum}
                 </Text>
               </Skeleton>
             </VStack>
@@ -477,7 +533,7 @@ export default function Staking() {
               <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
                 <Text align='center'
                   fontWeight='medium'>
-                  {frenzy}
+                  {frenzyNum}
                 </Text>
               </Skeleton>
             </VStack>
@@ -512,13 +568,13 @@ export default function Staking() {
                 Bears Unstaked
               </Heading>
               <Hide below='sm'> 
-                <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
+                <Checkbox onChange={(e) => selectAllUnstaked(e.target.checked)} iconColor='white' colorScheme={'blue'} iconSize='2rem'>
                   Select All
                 </Checkbox>
               </Hide>
             </Flex>
             <Hide above='sm'>
-              <Checkbox iconColor='white' colorScheme={'blue'} iconSize='2rem'>
+              <Checkbox onChange={(e) => selectAllUnstaked(e.target.checked)} iconColor='white' colorScheme={'blue'} iconSize='2rem'>
                 All
               </Checkbox>
             </Hide>
@@ -528,43 +584,62 @@ export default function Staking() {
                   Stake:
                 </Text>
               </VStack>
-              <Stack direction={{xsm: 'column', md: 'row'}}>
+              {approvedNFT ? 
+                <Stack direction={{xsm: 'column', md: 'row'}}>
+                  <Button 
+                    h='30px'
+                    variant={'outline'}
+                    bg='white'
+                    boxShadow={'md'}
+                    disabled={!connected}
+                    onClick={() => stakeSelected(0)}
+                    _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                    Peaceful
+                  </Button>
+                  <Button 
+                    h='30px'
+                    variant={'outline'}
+                    bg='white'
+                    boxShadow={'md'}
+                    disabled={!connected}
+                    onClick={() => stakeSelected(1)}
+                    _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                    Hungry
+                  </Button>
+                  <Button 
+                    h='30px'
+                    variant={'outline'}
+                    bg='white'
+                    boxShadow={'md'}
+                    disabled={!connected}
+                    onClick={() => stakeSelected(2)}
+                    _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                    Frenzy
+                  </Button>
+                </Stack>
+
+                :
+
                 <Button 
                   h='30px'
                   variant={'outline'}
                   bg='white'
                   boxShadow={'md'}
                   disabled={!connected}
+                  onClick={() => approveNFT()}
                   _hover={{backgroundColor: 'rgb(245,245,245)'}}>
-                  Peaceful
+                  Approve Staking
                 </Button>
-                <Button 
-                  h='30px'
-                  variant={'outline'}
-                  bg='white'
-                  boxShadow={'md'}
-                  disabled={!connected}
-                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
-                  Hungry
-                </Button>
-                <Button 
-                  h='30px'
-                  variant={'outline'}
-                  bg='white'
-                  boxShadow={'md'}
-                  disabled={!connected}
-                  _hover={{backgroundColor: 'rgb(245,245,245)'}}>
-                  Frenzy
-                </Button>
-              </Stack>
+              }
             </Flex>
           </Flex>
           <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
             {/* Map through the list of unstaked NFTs */}
-            {nfts.map((tokenId:number, index:number) => 
-              <Stack key={tokenId} minW='100px' border='solid 1px rgb(240,240,240)' bg={connected ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
-                <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
-                <Text fontWeight={'bold'} >#{tokenId}</Text>
+            {nftBool.map((bool:boolean, index:number) => 
+              <Stack key={index} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                     bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${nfts[index]}.png`} alt='id-pic' loading='lazy' />
+                <Text fontWeight={'bold'} >#{nfts[index]}</Text>
               </Stack>
             )}
           </HStack>
@@ -600,11 +675,12 @@ export default function Staking() {
                     </Button>
                   </Stack>
                 </HStack>
-                <Grid templateColumns={{ lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
-                  {peaceful.map((tokenId:number, index:number) => 
-                    <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                      <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
-                      <Text>#{tokenId}</Text>
+                <Grid justifyItems='center' templateColumns={{ lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                  {peacefulBool.map((bool:boolean, index:number) => 
+                    <Stack key={index + 15000} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                            bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                      <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${peaceful[index]}.png`} alt='id-pic' loading='lazy' />
+                      <Text fontWeight={'bold'} >#{peaceful[index]}</Text>
                     </Stack>
                   )}
                 </Grid>
@@ -640,11 +716,12 @@ export default function Staking() {
                     </Button>
                   </Stack>
                 </HStack>
-                <Grid templateColumns={{lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
-                  {hungry.map((tokenId:number, index:number) => 
-                    <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                      <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
-                      <Text>#{tokenId}</Text>
+                <Grid justifyItems='center' templateColumns={{lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                  {hungryBool.map((bool:boolean, index:number) => 
+                    <Stack key={index + 30000} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                          bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                      <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${hungry[index]}.png`} alt='id-pic' loading='lazy' />
+                      <Text fontWeight={'bold'} >#{hungry[index]}</Text>
                     </Stack>
                   )}
                 </Grid>
@@ -679,11 +756,12 @@ export default function Staking() {
                     </Button>
                   </Stack>
                 </HStack>
-                <Grid templateColumns={{ lg: '1fr 1fr'}}  p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
-                  {frenzy.map((tokenId:number, index:number) => 
-                    <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                      <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
-                      <Text>#{tokenId}</Text>
+                <Grid justifyItems='center' templateColumns={{ lg: '1fr 1fr'}}  p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                  {frenzyBool.map((bool:boolean, index:number) => 
+                    <Stack key={index + 45000} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                          bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                      <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${frenzy[index]}.png`} alt='id-pic' loading='lazy' />
+                      <Text fontWeight={'bold'} >#{frenzy[index]}</Text>
                     </Stack>
                   )}
                 </Grid>
@@ -725,10 +803,11 @@ export default function Staking() {
               </Flex>
             </Flex>
             <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
-              {peaceful.map((tokenId:number, index:number) => 
-                <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                  <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
-                  <Text>#{tokenId}</Text>
+              {peacefulBool.map((bool:boolean, index:number) => 
+                <Stack key={index + 15000} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                        bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                  <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${peaceful[index]}.png`} alt='id-pic' loading='lazy' />
+                  <Text fontWeight={'bold'} >#{peaceful[index]}</Text>
                 </Stack>
               )}
             </HStack>
@@ -766,10 +845,11 @@ export default function Staking() {
               </Flex>
             </Flex>
             <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
-              {hungry.map((tokenId:number, index:number) => 
-                <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                  <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
-                  <Text>#{tokenId}</Text>
+              {hungryBool.map((bool:boolean, index:number) => 
+                <Stack key={index + 30000} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                        bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                  <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${hungry[index]}.png`} alt='id-pic' loading='lazy' />
+                  <Text fontWeight={'bold'} >#{hungry[index]}</Text>
                 </Stack>
               )}
             </HStack>
@@ -807,16 +887,17 @@ export default function Staking() {
               </Flex>
             </Flex>
             <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
-              {frenzy.map((tokenId:number, index:number) => 
-                <Stack key={tokenId} minW='100px' h='115px' p='5px 10px' bg='rgb(180,180,180)' borderRadius='7px' justify='start' align='center' spacing='5px'>
-                  <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${tokenId}.png`} alt='id-pic' loading='lazy' />
-                  <Text>#{tokenId}</Text>
+              {frenzyBool.map((bool:boolean, index:number) => 
+                <Stack key={index + 45000} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                        bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                  <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${frenzy[index]}.png`} alt='id-pic' loading='lazy' />
+                  <Text fontWeight={'bold'} >#{frenzy[index]}</Text>
                 </Stack>
               )}
             </HStack>
           </Show>
         </VStack>  
-      </Box>    
+      </Box>     
     </Stack>
   )
 }

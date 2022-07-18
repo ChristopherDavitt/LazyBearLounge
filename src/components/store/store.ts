@@ -39,7 +39,7 @@ const reducer = (state = defaultState, action: any) => {
             return {...state, frenzyNum: action.payload}
         case "UPDATE_NFTS_SUPPLY":
             return {...state, nftSupply: action.payload}
-        case "UPDATE_APPROVAL_NFT":
+        case "UPDATE_APPROVAL_NFTS":
             return {...state, approvedNFT: action.payload}
         case "UPDATE_APPROVAL_TOKEN":
             return {...state, approvedToken: action.payload}
