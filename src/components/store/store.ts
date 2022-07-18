@@ -5,6 +5,9 @@ const defaultState = {
     peacefulStaked: [],
     hungryStaked: [],
     frenzyStaked: [],
+    peacefulNum: 0,
+    hungryNum: 0,
+    frenzyNum: 0,
     approvedNFT: false,
     approvedToken: 0,
     connected: false,
@@ -28,6 +31,12 @@ const reducer = (state = defaultState, action: any) => {
             return {...state, hungryStaked: action.payload}
         case "UPDATE_NFTS_FRENZY":
             return {...state, frenzyStaked: action.payload}
+        case "UPDATE_PEACEFUL_NUM":
+            return {...state, peacefulNum: action.payload}
+        case "UPDATE_HUNGRY_NUM":
+            return {...state, hungryNum: action.payload}
+        case "UPDATE_FRENZY_NUM":
+            return {...state, frenzyNum: action.payload}
         case "UPDATE_NFTS_SUPPLY":
             return {...state, nftSupply: action.payload}
         case "UPDATE_APPROVAL_NFT":

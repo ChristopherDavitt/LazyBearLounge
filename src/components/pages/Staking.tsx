@@ -4,33 +4,27 @@ import {
   Flex,
   Image,
   Text,
-  IconButton,
   Button,
   Stack,
-  Link,
-  useColorModeValue,
-  useDisclosure,
-  ScaleFade,
   VStack,
   HStack,
-  ModalHeader,
   Heading,
   Checkbox,
-  SimpleGrid,
   Grid,
   Hide,
   Show,
   Skeleton,
   
 } from '@chakra-ui/react';
-import {
-  HamburgerIcon,
-  CloseIcon
-} from '@chakra-ui/icons';
+import { useToast } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 
-import logo from '../assets/images/DiscordIcon.png'
+import { stakingABI, nftABI } from '../helpers/abis';
+import {staking, nft} from '../helpers/contracts';
 import { useAppSelector } from '../store/hooks';
+import peacefulIcon from '../assets/images/PeacefulIcon.png';
+import hungryIcon from '../assets/images/HungryIcon.png';
+import frenzyIcon from '../assets/images/FrenzyIcon.png';
 
 export default function Staking() {
   
@@ -45,8 +39,181 @@ export default function Staking() {
   const peaceful = useAppSelector((state) => state.peacefulStaked);
   const hungry = useAppSelector((state) => state.hungryStaked);
   const frenzy = useAppSelector((state) => state.frenzyStaked);
+  const toast = useToast();
+  
+  const changeTheEpoch = async() => {
+    const ethers = require('ethers')
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+    const stakingContract = new ethers.Contract(staking, stakingABI, signer)
+    // Staked Bears
+    try {
+        const tx = await stakingContract.changeEpoch();
+        toast({
+            title: 'Transaction Sent',
+            description: 'Changing Epoch.',
+            status: 'info',
+            position: 'top-right',
+            isClosable: true
+        })
+        await tx.wait()
+        toast({
+            title: 'Transaction Success',
+            description: 'Thank you for changing the Epoch :)',
+            status: 'success',
+            position: 'top-right',
+            isClosable: true
+        }) 
+    } catch (error) {
+        toast({
+            title: 'Transaction Failed',
+            description: 'TXN Failed...',
+            status: 'error',
+            position: 'top-right',
+            isClosable: true
+        })
+        console.log(error)
+    }
+  }
 
+  const stake = async(nfts: number[], poolNum: number) => {
+    const ethers = require('ethers')
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+    const stakingContract = new ethers.Contract(staking, stakingABI, signer)
+    // Staked Bears
+    try {
+        const tx = await stakingContract.changePool(nfts, poolNum);
+        toast({
+            title: 'Transaction Sent',
+            description: 'Changing staking pools.',
+            status: 'info',
+            position: 'top-right',
+            isClosable: true
+        })
+        await tx.wait()
+        toast({
+            title: 'Transaction Success',
+            description: 'Staking pools updated.',
+            status: 'success',
+            position: 'top-right',
+            isClosable: true
+        }) 
+    } catch (error) {
+        toast({
+            title: 'Transaction Failed',
+            description: 'TXN Failed. If problem persists please notify.',
+            status: 'error',
+            position: 'top-right',
+            isClosable: true
+        })
+        console.log(error)
+    }
+  }
 
+  const approveNFT = async() => {
+    const ethers = require('ethers')
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+    const nftContract = new ethers.Contract(nft, nftABI, signer)
+    // Staked Bears
+    try {
+        const tx = await nftContract.setApprovalForAll(staking, true);
+        toast({
+            title: 'Transaction Sent',
+            description: 'Setting Approval For Staking Contract.',
+            status: 'info',
+            position: 'top-right',
+            isClosable: true
+        })
+        await tx.wait()
+        toast({
+            title: 'Transaction Success',
+            description: 'Approved.',
+            status: 'success',
+            position: 'top-right',
+            isClosable: true
+        }) 
+    } catch (error) {
+        toast({
+            title: 'Transaction Failed',
+            description: 'TXN Failed. If problem persists please notify.',
+            status: 'error',
+            position: 'top-right',
+            isClosable: true
+        })
+        console.log(error)
+    }
+  }
+
+  const changeStakePool = async(nfts: number[], poolNum: number) => {
+    const ethers = require('ethers')
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+    const stakingContract = new ethers.Contract(staking, stakingABI, signer)
+    // Staked Bears
+    try {
+        const tx = await stakingContract.changePoolLoop(nfts, poolNum);
+        toast({
+            title: 'Transaction Sent',
+            description: 'Changing staking pools.',
+            status: 'info',
+            position: 'top-right',
+            isClosable: true
+        })
+        await tx.wait()
+        toast({
+            title: 'Transaction Success',
+            description: 'Staking pools updated.',
+            status: 'success',
+            position: 'top-right',
+            isClosable: true
+        }) 
+    } catch (error) {
+        toast({
+            title: 'Transaction Failed',
+            description: 'TXN Failed. If problem persists please notify.',
+            status: 'error',
+            position: 'top-right',
+            isClosable: true
+        })
+        console.log(error)
+    }
+  }
+  const claimRewards = async() => {
+    const ethers = require('ethers')
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+    const stakingContract = new ethers.Contract(staking, stakingABI, signer)
+    // Staked Bears
+    try {
+        const tx = await stakingContract.claimRewards();
+        toast({
+            title: 'Transaction Sent',
+            description: 'Collecting Rewards.',
+            status: 'info',
+            position: 'top-right',
+            isClosable: true
+        })
+        await tx.wait()
+        toast({
+            title: 'Transaction Success',
+            description: 'Rewards Claimed.',
+            status: 'success',
+            position: 'top-right',
+            isClosable: true
+        }) 
+    } catch (error) {
+        toast({
+            title: 'Transaction Failed',
+            description: 'TXN Failed. If problem persists please notify.',
+            status: 'error',
+            position: 'top-right',
+            isClosable: true
+        })
+        console.log(error)
+    }
+  }
 
   return (
     <Stack
@@ -85,9 +252,8 @@ export default function Staking() {
             >
             Current Epoch
           </Heading>
-          <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}> 
+          <Skeleton h='20px' w='90%' fadeDuration={1} isLoaded={connected}> 
             <Text
-              
               fontSize='lg'
               fontWeight='light'
               color='rgb(90,90,90)'
@@ -102,7 +268,7 @@ export default function Staking() {
             >
             Next Epoch
           </Heading>
-          <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
+          <Skeleton h='20px' w='90%' fadeDuration={1} isLoaded={connected}>
             <Text
               fontSize='lg'
               fontWeight='light'
@@ -130,7 +296,7 @@ export default function Staking() {
             color='rgb(60,60,60)'>
             Balance
           </Heading>
-          <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
+          <Skeleton h='20px' w='90%' fadeDuration={1} isLoaded={connected}>
             <Text
               fontSize='lg'
               fontWeight='light'
@@ -208,24 +374,36 @@ export default function Staking() {
               </Text>
             </Stack>
           </Box>
-          
-          <Heading 
-            as='h3'
-            size='lg'
-            color='rgb(60,60,60)'
-            >
-            Resupply
-          </Heading>
-          <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
-            <Text
-              fontSize='lg'
-              fontWeight='light'
-              color='rgb(90,90,90)'
+          {approvedNFT &&
+            <VStack 
               align='center'
-              >
-              5:00:00
-            </Text>
-          </Skeleton>
+              justify='space-around'
+              w='100%'
+              boxShadow={'md'}
+              borderRadius='lg'
+              spacing={0}
+              p='0.5rem'>
+              <Button 
+                h='30px'
+                variant={'outline'}
+                bg='white'
+                boxShadow={'md'}
+                disabled={!connected}
+                _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                Approve Staking
+              </Button>
+              <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
+                <Text
+                  fontSize='md'
+                  fontWeight='light'
+                  color='rgb(200,200,200)'
+                  align='center'
+                  >
+                  Approve staking contract to earn FISH
+                </Text>
+              </Skeleton>
+            </VStack>
+          }
         </VStack>
         
         <Stack 
@@ -245,67 +423,64 @@ export default function Staking() {
             Bears Staked
           </Heading>
           <Flex
-            justify='space-between'
+            justify='space-around'
             align='center'
             w='100%'
             >
-            <Flex
-              gap='2rem'>
-              <Image src={'#'} alt='p-pic' />
+            <Image src={peacefulIcon} alt='p-pic' />
+            <VStack w='70px' align='start'>
               <Text
                 fontSize='md'
                 color='rgb(60,60,60)'>
                 Peaceful
               </Text>
-            </Flex>
-            <Skeleton h='20px' w='50%' fadeDuration={1} isLoaded={connected}>
-              <Text align='center'
-                fontWeight='medium'>
-                1213
-              </Text>
-            </Skeleton>
+              <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
+                <Text align='center'
+                  fontWeight='medium'>
+                  {peaceful}
+                </Text>
+              </Skeleton>
+            </VStack>
           </Flex>
           <Flex
-            justify='space-between'
+            justify='space-around'
             align='center'
             w='100%'
             >
-            <Flex
-              gap='2rem'>
-              <Image src={'#'} alt='h-pic' />
+            <Image src={hungryIcon} alt='p-pic' />
+            <VStack w='70px' align='start'>
               <Text
                 fontSize='md'
                 color='rgb(60,60,60)'>
                 Hungry
               </Text>
-            </Flex>
-            <Skeleton h='20px' w='50%' fadeDuration={1} isLoaded={connected}>
-              <Text
-                fontWeight='medium'>
-                1213
-              </Text>
-            </Skeleton>
+              <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
+                <Text align='center'
+                  fontWeight='medium'>
+                  {hungry}
+                </Text>
+              </Skeleton>
+            </VStack>
           </Flex>
           <Flex
-            justify='space-between'
+            justify='space-around'
             align='center'
             w='100%'
             >
-            <Flex
-              gap='2rem'>
-              <Image src={'#'} alt='f-pic' />
+            <Image src={frenzyIcon} alt='p-pic' />
+            <VStack w='70px' align='start'>
               <Text
                 fontSize='md'
                 color='rgb(60,60,60)'>
                 Frenzy
               </Text>
-            </Flex>
-            <Skeleton h='20px' w='50%' fadeDuration={1} isLoaded={connected}>
-              <Text
-                fontWeight='medium'>
-                1213
-              </Text>
-            </Skeleton>
+              <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
+                <Text align='center'
+                  fontWeight='medium'>
+                  {frenzy}
+                </Text>
+              </Skeleton>
+            </VStack>
           </Flex>
         </Stack>
       </Grid>

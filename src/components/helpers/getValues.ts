@@ -1,7 +1,6 @@
 import { ethers } from 'ethers';
 import { stakingABI, nftABI } from './abis';
 import {staking, nft} from './contracts';
-
 // get unstaked IDs, = walletOfOwner
 
 export const getNFTData = async (address:any) => {
@@ -76,7 +75,13 @@ export const getStaked = async(address:any) => {
         const stakedBearsFrenzy = await stakingContract.getFrenzyList(address);
         const stakedBearsFrenzyParsed : number[] = [];
         stakedBearsFrenzy.forEach((e:any) => stakedBearsFrenzyParsed.push(parseInt(e._hex, 16)))
-        return [stakedBearsPeacefulParsed, stakedBearsHungryParsed, stakedBearsFrenzyParsed]
+        const totalPeaceful = await stakingContract.totalPeacefulStaked()
+        const totalPeacefulParsed = parseInt(totalPeaceful._hex, 16)
+        const totalHungry = await stakingContract.totalHungryStaked()
+        const totalHungryParsed = parseInt(totalHungry._hex, 16)
+        const totalFrenzy = await stakingContract.totalFrenzyStaked()
+        const totalFrenzyParsed = parseInt(totalFrenzy._hex, 16)
+        return [stakedBearsPeacefulParsed, stakedBearsHungryParsed, stakedBearsFrenzyParsed, totalPeacefulParsed, totalHungryParsed, totalFrenzyParsed]
 
     } catch (error) {
         console.log('Getting Bears Staked' + error)

@@ -122,7 +122,7 @@ export default function Navbar() {
     const [ nfts, supply, approved ] = await getNFTData(address);
     console.log([ nfts, supply, approved ])
     dispatch({type: 'UPDATE_NFTS_UNSTAKED', payload: nfts});
-    dispatch({type: 'UPDATE_SUPPLY', payload: supply});
+    dispatch({type: 'UPDATE_NFTS_SUPPLY', payload: supply});
     dispatch({type: 'UPDATE_APPROVAL_NFTS', payload: approved});
   }
   const retrieveTokenInfo = async (address:any) => {
@@ -140,11 +140,14 @@ export default function Navbar() {
   }
   
   const retrieveStaked = async (address:any) => {
-    const [ peaceful, hungry, frenzy ] = await getStaked(address);
+    const [ peaceful, hungry, frenzy, pNum, hNum, fNum ] = await getStaked(address);
     console.log([peaceful, hungry, frenzy])
     dispatch({type: 'UPDATE_NFTS_PEACEFUL', payload: peaceful});
     dispatch({type: 'UPDATE_NFTS_HUNGRY', payload: hungry});
     dispatch({type: 'UPDATE_NFTS_FRENZY', payload: frenzy});
+    dispatch({type: 'UPDATE_PEACEFUL_NUM', payload: pNum});
+    dispatch({type: 'UPDATE_HUNGRY_NUM', payload: hNum});
+    dispatch({type: 'UPDATE_FRENZY_NUM', payload: fNum});
   }
 
   return (
