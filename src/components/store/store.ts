@@ -18,6 +18,8 @@ const defaultState = {
     epochNum: 0,
     river: 0,
     lastEpochTime: 0,
+    nftPaused: true,
+    stakingPaused: true,
     address: '0x0000000000000000000000000000000000000000'
 }
 

@@ -19,6 +19,7 @@ import {
 import { useToast } from '@chakra-ui/react';
 import { ethers } from 'ethers';
 
+import Timer from '../helpers/Timer';
 import { stakingABI, nftABI } from '../helpers/abis';
 import { getStaked, getNFTData } from '../helpers/getValues';
 import {staking, nft} from '../helpers/contracts';
@@ -63,7 +64,6 @@ export default function Staking() {
     setPeacefulBool(peacefulBoolArray);
     setHungryBool(hungryBoolArray);
     setFrenzyBool(frenzyBoolArray);
-    console.log(nftBoolArray)
   }, [peaceful, hungry, frenzy, nfts])
   
   const clickNftUnstaked = (_index: number) => {
@@ -350,15 +350,8 @@ export default function Staking() {
             >
             Next Epoch
           </Heading>
-          <Skeleton h='20px' w='90%' fadeDuration={1} isLoaded={connected}>
-            <Text
-              fontSize='lg'
-              fontWeight='light'
-              color='rgb(90,90,90)'
-              align='center'
-              >
-              Please Wait...
-            </Text>
+          <Skeleton h='30px' w='90%' fadeDuration={1} isLoaded={connected}>
+              <Timer time={epochTime} />
           </Skeleton>
         </VStack>
         <Stack 
@@ -544,7 +537,7 @@ export default function Staking() {
         w='calc(100vw - 40px)'
         maxW='1200px' 
         minH='640px'
-        h={{xsm: '970px', sm: 'calc(100vh - 150px)'}}
+        h={{xsm: '1007px', sm: 'calc(100vh - 150px)'}}
         maxH={{sm: '730px'}}
         borderRadius='lg'
         p='0.5rem 1rem'
@@ -579,11 +572,14 @@ export default function Staking() {
               </Checkbox>
             </Hide>
             <Flex gap='5px' align='center'>
-              <VStack>          
-                <Text fontWeight='400'>
-                  Stake:
-                </Text>
-              </VStack>
+              <Hide below='sm'>
+                <VStack>          
+                  <Text fontWeight='400'>
+                    Stake:
+                  </Text>
+                </VStack>
+              </Hide>
+             
               {approvedNFT ? 
                 <Stack direction={{xsm: 'column', md: 'row'}}>
                   <Button 
@@ -636,7 +632,7 @@ export default function Staking() {
           <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
             {/* Map through the list of unstaked NFTs */}
             {nftBool.map((bool:boolean, index:number) => 
-              <Stack key={index} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+              <Stack key={index} onClick={() => clickNftUnstaked(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
                      bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                 <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${nfts[index]}.png`} alt='id-pic' loading='lazy' />
                 <Text fontWeight={'bold'} >#{nfts[index]}</Text>
@@ -677,7 +673,7 @@ export default function Staking() {
                 </HStack>
                 <Grid justifyItems='center' templateColumns={{ lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
                   {peacefulBool.map((bool:boolean, index:number) => 
-                    <Stack key={index + 15000} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                    <Stack key={index + 15000} onClick={() => clickNftUnstaked(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
                             bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                       <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${peaceful[index]}.png`} alt='id-pic' loading='lazy' />
                       <Text fontWeight={'bold'} >#{peaceful[index]}</Text>
@@ -718,7 +714,7 @@ export default function Staking() {
                 </HStack>
                 <Grid justifyItems='center' templateColumns={{lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
                   {hungryBool.map((bool:boolean, index:number) => 
-                    <Stack key={index + 30000} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                    <Stack key={index + 30000} onClick={() => clickNftUnstaked(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
                           bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                       <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${hungry[index]}.png`} alt='id-pic' loading='lazy' />
                       <Text fontWeight={'bold'} >#{hungry[index]}</Text>
@@ -758,7 +754,7 @@ export default function Staking() {
                 </HStack>
                 <Grid justifyItems='center' templateColumns={{ lg: '1fr 1fr'}}  p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
                   {frenzyBool.map((bool:boolean, index:number) => 
-                    <Stack key={index + 45000} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                    <Stack key={index + 45000} onClick={() => clickNftUnstaked(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
                           bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                       <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${frenzy[index]}.png`} alt='id-pic' loading='lazy' />
                       <Text fontWeight={'bold'} >#{frenzy[index]}</Text>
@@ -775,11 +771,6 @@ export default function Staking() {
                 All
               </Checkbox>
               <Flex gap='5px' align='center'>
-                <VStack>          
-                  <Text fontWeight='400'>
-                    Switch:
-                  </Text>
-                </VStack>
                 <Stack direction={{xsm: 'column', md: 'row'}}>
                   <Button 
                     h='30px'
@@ -802,9 +793,9 @@ export default function Staking() {
                 </Stack>
               </Flex>
             </Flex>
-            <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
+            <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
               {peacefulBool.map((bool:boolean, index:number) => 
-                <Stack key={index + 15000} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                <Stack key={index + 15000} onClick={() => clickNftUnstaked(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
                         bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                   <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${peaceful[index]}.png`} alt='id-pic' loading='lazy' />
                   <Text fontWeight={'bold'} >#{peaceful[index]}</Text>
@@ -817,11 +808,6 @@ export default function Staking() {
                 All
               </Checkbox>
               <Flex gap='5px' align='center'>
-                <VStack>          
-                  <Text fontWeight='400'>
-                    Switch:
-                  </Text>
-                </VStack>
                 <Stack direction={{xsm: 'column', md: 'row'}}>
                   <Button 
                     h='30px'
@@ -844,9 +830,9 @@ export default function Staking() {
                 </Stack>
               </Flex>
             </Flex>
-            <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
+            <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
               {hungryBool.map((bool:boolean, index:number) => 
-                <Stack key={index + 30000} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                <Stack key={index + 30000} onClick={() => clickNftUnstaked(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
                         bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                   <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${hungry[index]}.png`} alt='id-pic' loading='lazy' />
                   <Text fontWeight={'bold'} >#{hungry[index]}</Text>
@@ -859,11 +845,6 @@ export default function Staking() {
                 All
               </Checkbox>
               <Flex gap='5px' align='center'>
-                <VStack>          
-                  <Text fontWeight='400'>
-                    Switch:
-                  </Text>
-                </VStack>
                 <Stack direction={{xsm: 'column', md: 'row'}}>
                   <Button 
                     h='30px'
@@ -886,9 +867,9 @@ export default function Staking() {
                 </Stack>
               </Flex>
             </Flex>
-            <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='130px'>
+            <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
               {frenzyBool.map((bool:boolean, index:number) => 
-                <Stack key={index + 45000} onClick={() => clickNftUnstaked(index)} cursor='pointer' minW='100px' border='solid 1px rgb(240,240,240)' 
+                <Stack key={index + 45000} onClick={() => clickNftUnstaked(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
                         bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                   <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${frenzy[index]}.png`} alt='id-pic' loading='lazy' />
                   <Text fontWeight={'bold'} >#{frenzy[index]}</Text>

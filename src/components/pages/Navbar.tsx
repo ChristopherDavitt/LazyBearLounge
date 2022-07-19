@@ -23,10 +23,20 @@ import logo from '../assets/images/DiscordIcon.png'
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getNFTData, getStaked,
          getEpoch, getTokenInfo } from '../helpers/getValues';
+import CloseWalletModal from '../helpers/CloseWalletModal';
 
 export default function Navbar() {
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { 
+    isOpen: isNavOpen, 
+    onOpen: onNavOpen, 
+    onClose: onNavClose 
+  } = useDisclosure();
+  const { 
+    isOpen: isModalOpen, 
+    onOpen: onModalOpen, 
+    onClose: onModalClose 
+  } = useDisclosure();
 
   const [selected, setSelected] = useState<string>('home');
   const [connButtonText, setConnButtonText] = useState('Connect Wallet');
@@ -74,35 +84,46 @@ export default function Navbar() {
   }
 
   const connectWalletHandler = () => {
-      if (!connected){
-          if (window.ethereum) {
-              // Trigger network switch
-              if (window.ethereum.networkVersion != 43113) {
-                  window.ethereum.request({
-                      method: "wallet_switchEthereumChain",
-                      params: [{
-                          chainId: `0x${Number(43113).toString(16)}`
-                      }]
-                    })
-                  handleNetworkSwitch('fuji')
-              } else {
-                  window.ethereum.request({method: 'eth_requestAccounts'})
-                  .then((result: string[]) => {
-                    setConnButtonText(truncateAddress(result[0]));
-                    dispatch({type: 'LOADING'});
-                    retrieveAll(result[0]);
-                    dispatch({type: 'UPDATE_ADDRESS', payload: result[0]});
-                    dispatch({type: 'CONNECT_WALLET'})
-                    
-                  })
-              } 
-          } else {
-            setConnButtonText('Connect Wallet'); 
-            dispatch({type: 'DISCONNECT_WALLET'});
-          }
+    if (window.ethereum) {
+      // Trigger network switch
+      if (window.ethereum.networkVersion != 43113) {
+        window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{
+                chainId: `0x${Number(43113).toString(16)}`
+            }]
+          })
+        handleNetworkSwitch('fuji')
       } else {
-        setConnButtonText('Connect Wallet'); 
-        dispatch({type: 'DISCONNECT_WALLET'});
+        window.ethereum.request({method: 'eth_requestAccounts'})
+        .then((result: string[]) => {
+          setConnButtonText(truncateAddress(result[0]));
+          dispatch({type: 'LOADING'});
+          retrieveAll(result[0]);
+          dispatch({type: 'UPDATE_ADDRESS', payload: result[0]});
+          dispatch({type: 'CONNECT_WALLET'})
+          
+        })
+      } 
+    } else {
+      setConnButtonText('Connect Wallet'); 
+      dispatch({type: 'DISCONNECT_WALLET'});
+    }
+  }
+
+  
+
+  const disconnectWallet = () => {
+    setConnButtonText('Connect Wallet'); 
+    dispatch({type: 'DISCONNECT_WALLET'});
+    onModalClose()
+  }
+
+  const handleConnectWalletHandler = () => {
+      if (!connected){
+        connectWalletHandler()
+      } else {
+        onModalOpen()
       }
   }
 
@@ -221,20 +242,20 @@ export default function Navbar() {
               w='140px'
               h='36px'
               variant='outline'
-              onClick={() => connectWalletHandler()}>
+              onClick={() => handleConnectWalletHandler()}>
               {connButtonText}
             </Button>
             <IconButton
               size={'md'}
-              icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+              icon={isNavOpen ? <CloseIcon /> : <HamburgerIcon />}
               aria-label={'Open Menu'}
               display={{ sm: 'none' }}
-              onClick={isOpen ? onClose : onOpen}
+              onClick={isNavOpen ? onNavClose : onNavOpen}
             />
           </Flex>
         </Flex>
-        {isOpen ? (
-          <ScaleFade in={isOpen} initialScale={0.9}>
+        {isNavOpen ? (
+          <ScaleFade in={isNavOpen} initialScale={0.9}>
             <Box pb={4} display={{ sm: 'none' }}>
               <Stack as={'nav'} spacing={4} justify='center' align='center' p='2rem 0'>
                 <Link 
@@ -278,6 +299,7 @@ export default function Navbar() {
           </ScaleFade>
         ) : null}
       </Box>
+      {isModalOpen && <CloseWalletModal disconnect={disconnectWallet} closeModal={onModalClose} />}
     </>
   )
 }
