@@ -16,7 +16,8 @@ export const getNFTData = async (address:any) => {
         const supply = await nftContract.totalSupply();
         const parsedSupply = parseInt(supply._hex, 16)
         const approved = await nftContract.isApprovedForAll(address, staking);
-        return [nftsParsed, parsedSupply, approved];
+        const paused = await nftContract.paused();
+        return [nftsParsed, parsedSupply, approved, paused];
     } catch (error) {
         console.log('Gettings NFT data ' + error)
         return []
@@ -35,7 +36,8 @@ export const getTokenInfo = async( address:any) => {
         const parsedRewards = parseInt(rewards._hex, 16);
         const allowance = await stakingContract.allowance(address, nft);
         const parsedAllowance = parseInt(allowance._hex, 16);
-        return [parsedBalance, parsedRewards, parsedAllowance]
+        const paused = await stakingContract.paused();
+        return [parsedBalance, parsedRewards, parsedAllowance, paused]
     } catch (error) {
         console.log('Gettings Balance' + error)
         return []

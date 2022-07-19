@@ -57,6 +57,10 @@ const reducer = (state = defaultState, action: any) => {
             return {...state, river: action.payload}
         case "UPDATE_AVAX":
             return {...state, avax: action.payload}
+        case "UPDATE_RIVER_PAUSED":
+            return {...state, river: action.payload}
+        case "UPDATE_NFT_PAUSED":
+            return {...state, avax: action.payload}
         case "CONNECT_WALLET":
             return {...state, connected: true};
         case "UPDATE_ADDRESS":

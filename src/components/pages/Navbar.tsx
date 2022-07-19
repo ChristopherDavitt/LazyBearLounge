@@ -98,7 +98,6 @@ export default function Navbar() {
         window.ethereum.request({method: 'eth_requestAccounts'})
         .then((result: string[]) => {
           setConnButtonText(truncateAddress(result[0]));
-          dispatch({type: 'LOADING'});
           retrieveAll(result[0]);
           dispatch({type: 'UPDATE_ADDRESS', payload: result[0]});
           dispatch({type: 'CONNECT_WALLET'})
@@ -110,8 +109,6 @@ export default function Navbar() {
       dispatch({type: 'DISCONNECT_WALLET'});
     }
   }
-
-  
 
   const disconnectWallet = () => {
     setConnButtonText('Connect Wallet'); 
@@ -132,7 +129,6 @@ export default function Navbar() {
     await retrieveTokenInfo(address);
     await retrieveEpoch(address);
     await retrieveStaked(address);
-    dispatch({type: 'FINISH_LOADING'})
     window.ethereum.request({method: 'eth_getBalance', params: [address, 'latest']})
     .then((balance: any) => {
       dispatch({type: "UPDATE_AVAX", payload: Number(ethers.utils.formatEther(balance)).toFixed(4)})
@@ -140,17 +136,20 @@ export default function Navbar() {
   }
 
   const retrieveNFTData = async (address:any) => {
-    const [ nfts, supply, approved ] = await getNFTData(address);
+    const [ nfts, supply, approved, paused ] = await getNFTData(address);
     console.log([ nfts, supply, approved ])
     dispatch({type: 'UPDATE_NFTS_UNSTAKED', payload: nfts});
     dispatch({type: 'UPDATE_NFTS_SUPPLY', payload: supply});
     dispatch({type: 'UPDATE_APPROVAL_NFTS', payload: approved});
+    dispatch({type: 'UPDATE_NFT_PAUSED', payload: paused});
   }
   const retrieveTokenInfo = async (address:any) => {
-    const [ balance, rewards ] = await getTokenInfo(address);
+    const [ balance, rewards, allowance, paused ] = await getTokenInfo(address);
     console.log([ balance, rewards ])
     dispatch({type: 'UPDATE_BALANCE', payload: balance});
     dispatch({type: 'UPDATE_CLAIMABLE', payload: rewards});
+    dispatch({type: 'UPDATE_APPROVAL_TOKEN', payload: allowance});
+    dispatch({type: 'UPDATE_RIVER_PAUSED', payload: paused});
   }
   const retrieveEpoch = async (address:any) => {
     const [epoch, epochTime, riverSupply] = await getEpoch(address);
