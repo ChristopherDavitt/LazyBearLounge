@@ -3,7 +3,11 @@ import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { Stack, Image, Box, Grid,
         Text, Heading, VStack, 
         HStack, Button, Divider, 
-        Flex, useDisclosure } from '@chakra-ui/react';
+        Flex, useDisclosure,
+        Accordion, AccordionItem,
+        AccordionButton, AccordionPanel,
+        AccordionIcon,
+        background, } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import hero from '../assets/images/43.png';
@@ -15,15 +19,28 @@ import selectBear from '../assets/images/selectBear.png';
 
 export default function Landing() {
 
-    const { 
-        isOpen: isOpenBackground, 
-        onOpen: onBackgroundOpen, 
-        onClose: onBackgroundClose 
-    } = useDisclosure();
+  const backgrounds = ['Blue', 'Purple', 'Red'];
+  const backgroundStats = [60, 25, 15];
+  const bearType = ['Grizzly', 'Brown', 'Black', 'Polar', 'Sea Bear', 'Zombie'];
+  const bearTypeStats = [23, 23, 23, 15, 7.5, 7.5];
+  const eye = ['Normal',   'Confused', 'Angry', 'Sleepy','Eyelashes','Glaring', 'Dazed', 'Zoned Out', 'Shades', 'Nerd Glasses',
+               'Eye Patch', 'Third  Eye',  'Masquarade', 'VR', 'Lazer Eyes', '3D' ,'Exposed Skull', 'Destroyer' ];
+  const eyeStats = [4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 2, 2, 1.5, 1.5, 1, 1, 1, 1, 1];
+  const mouth = ['Smile', 'Frown', 'Pursed', 'Whistling', 'Smirk', 'In Awe', 'Open Mouth', 
+                'Lips', 'Cig', 'E-Cig', 'Tongue Out', 'Pipe', 'Dead Fish', 'Scary' ];
+  const mouthStats = [5, 5, 5, 4, 4, 4, 4, 4, 3, 3, 3, 2, 2, 1];
+  const hat = ['None', 'Honey Pot', 'Baseball Cap', 'Apple', 'Red Mohawk', 'Bow', 'Earing', 
+                'Circus', 'Top Hat', 'Green Mohawk', 'Fire Fighter', 'Tiara', 'Chick',
+                'Crown', 'Smoky Ranger', 'Pirate'];
+  const hatStats = [10, 4, 4, 4, 4, 3, 3, 3, 2.5, 2, 2, 2, 1.5, 1.5, 1, 1, 1];
+  const shirt = ['None', 'Blue Bandana', 'Red Bandana', 'Pearl Necklace', 'Gold Chain', 
+                 'Fire Fighter', 'Fishing Vest', 'Jean Jacket', 'Tuxedo',
+                 'Holiday Sweater', 'Jersey', 'Harpoon',];
+  const shirtStats = [10, 8, 8, 4, 3.5, 3, 3, 3, 3, 2.5, 2, 1];
 
   return (
-    <Box p={4}>
-        <Stack m='2rem 0' gap='1rem' minH='400px' boxShadow={'lg'} bg='rgb(245,245,245)' borderRadius='lg' justify='space-between' direction={{xsm:'column', sm: 'column',md: 'row-reverse', lg:'row-reverse', xl: 'row-reverse'}} p={4}>
+    <Box>
+        <Stack m={4} gap='1rem' minH='400px' justify='space-between' direction={{xsm:'column', sm: 'column',md: 'row-reverse', lg:'row-reverse', xl: 'row-reverse'}} p={4}>
             <Image sizes='30vw' maxW='400px' src={hero} alt='hero-image'/>
             <VStack gap='1rem' justify='center' align='start'>
                 <Heading as='h1' size='3xl' >
@@ -57,8 +74,7 @@ export default function Landing() {
                 </Flex>
             </VStack>
         </Stack>
-        <Divider />
-        <Stack m='2rem 0' p={4} boxShadow={'lg'} bg='rgb(245,245,245)' borderRadius='lg' align='center' justify='center' gap='2rem'>
+        <Stack m='2rem 0' p={6} bg='rgb(245,245,245)' align='center' justify='center' gap='2rem'>
             <VStack>
                 <Heading as='h2' size='xl'>
                     The River
@@ -69,7 +85,7 @@ export default function Landing() {
                 </Text>
             </VStack>
             <Grid m='1rem 0' templateColumns={{xsm:'1fr', sm:'1fr 1fr', lg: '1fr 1fr 1fr 1fr'}} gap='1rem'>
-                <Stack bg='white' borderRadius='lg' p={4} boxShadow='md' align='center' justify='start'>
+                <Stack p={4}  align='center' justify='start'>
                     {/* <Icon  /> */}
                     <Heading>
                         Staking
@@ -78,10 +94,10 @@ export default function Landing() {
                     <Image src={stakingGif} alt='grid-pic' />
                     <Divider />
                     <Text color='rgb(100,100,100)'  align='center' size='sm'>
-                        Choose your own strategy on your quest for FISH
+                        Choose your own strategy on your quest for $FISH
                     </Text>
                 </Stack>
-                <Stack bg='white' borderRadius='lg' p={4} boxShadow='md' align='center' justify='start'>
+                <Stack p={4}  align='center' justify='start'>
                     {/* <Icon  /> */}
                     <Heading>
                         Collection
@@ -90,10 +106,10 @@ export default function Landing() {
                     <Image borderRadius='7px' src={collect} alt='grid-pic' />
                     <Divider />
                     <Text color='rgb(100,100,100)'  align='center' size='sm'>
-                        Collectible bears from over 130 unique characteristics
+                        Collectible bears with over 69 unique attributes
                     </Text>
                 </Stack>
-                <Stack bg='white' borderRadius='lg' p={4} boxShadow='md' align='center' justify='start'>
+                <Stack p={4}  align='center' justify='start'>
                     {/* <Icon  /> */}
                     <Heading>
                         Supply
@@ -102,10 +118,13 @@ export default function Landing() {
                     <Image w='400px' src={exponential} alt='grid-pic' />
                     <Divider />
                     <Text color='rgb(100,100,100)'  align='center' size='sm'>
-                        River supply that simulates natural population growth
+                        $FISH supply that simulates natural population growth.
+                    </Text>
+                    <Text color='rgb(100,100,100)'  align='center' size='sm'>
+                        1 $FISH = 1 $FISH
                     </Text>
                 </Stack>
-                <Stack bg='white' borderRadius='lg' p={4} boxShadow='md' align='center' justify='start'>
+                <Stack p={4}  align='center' justify='start'>
                     {/* <Icon  /> */}
                     <Heading>
                         Game Theory
@@ -114,90 +133,178 @@ export default function Landing() {
                     <Image w='400px' src={allThree} alt='grid-pic' />
                     <Divider />
                     <Text color='rgb(100,100,100)'  align='center' size='sm'>
-                        Compete or work together to survive on the river
+                        Compete or work together to survive on The River
                     </Text>
                 </Stack>
             </Grid>
         </Stack>
-        <Divider />
-        <Stack m='2rem 0' p={4} boxShadow={'lg'} bg='rgb(245,245,245)' borderRadius='lg' w='100%' align='center' justify='center' >
+        <Stack m='2rem 0' p={6} w='100%' align='center' justify='center' >
             <Heading>
                 Bears
             </Heading>
+            <Text color='rgb(200,200,200)'>
+                Over 200,000 unique bear options
+            </Text>
             <Divider w='300px' />
             <Stack direction={{xsm: 'column', sm:'column', md:'row', lg: 'row'}} align='start' gap='2rem' w='100%' p={4}>
                 <Box w='100%'>
                     <Image m='auto' w='100%' maxW='400px' src={selectBear} alt='bear-customization' />
                 </Box>
-                <Grid w='100%' templateColumns='1fr' gap='1rem'>
-                    <Stack>
-                        <Flex w='100%' h='75px' cursor='pointer' align='center' bg='white' 
-                         borderRadius='md' boxShadow='md'  p={4} justify='space-between'
-                            onClick={isOpenBackground ? onBackgroundClose : onBackgroundOpen} >
-                            <Heading as='h4' size='sm' >Background</Heading>
-                            <Flex align='center' gap='1rem'>
-                                <Text color='rgb(160,160,160)' >5</Text>
-                                {isOpenBackground ? <ChevronDownIcon /> : <ChevronUpIcon />}
-                            </Flex>
-                        </Flex>
-                        {isOpenBackground && 
-                            <Stack p={4} >
-                                <Text>Blue</Text>
-                                <Text>Purple</Text>
-                                <Text>Red</Text>
-                            </Stack>
-                        }
-                    </Stack>
-                    <Flex w='100%' h='75px' cursor='pointer' align='center' bg='white' 
-                         borderRadius='md' boxShadow='md'  p={4} justify='space-between'
-                            onClick={isOpenBackground ? onBackgroundClose : onBackgroundOpen} >
-                        <Heading as='h4' size='sm' >Bear Type</Heading>
-                        <Flex align='center' gap='1rem'>
-                            <Text color='rgb(160,160,160)' >6</Text>
-                            {isOpenBackground ? <ChevronDownIcon /> : <ChevronUpIcon />}
-                        </Flex>
-                    </Flex>
-                    <Flex w='100%' h='75px' cursor='pointer' align='center' bg='white' 
-                         borderRadius='md' boxShadow='md'  p={4} justify='space-between'
-                            onClick={isOpenBackground ? onBackgroundClose : onBackgroundOpen} >
-                        <Heading as='h4' size='sm' >Hat</Heading>
-                        <Flex align='center' gap='1rem'>
-                            <Text color='rgb(160,160,160)' >14</Text>
-                            {isOpenBackground ? <ChevronDownIcon /> : <ChevronUpIcon />}
-                        </Flex>
-                    </Flex>
-                    <Flex w='100%' h='75px' cursor='pointer' align='center' bg='white' 
-                         borderRadius='md' boxShadow='md'  p={4} justify='space-between'
-                            onClick={isOpenBackground ? onBackgroundClose : onBackgroundOpen} >
-                        <Heading as='h4' size='sm' >Shirt</Heading>
-                        <Flex align='center' gap='1rem'>
-                            <Text color='rgb(160,160,160)' >15</Text>
-                            {isOpenBackground ? <ChevronDownIcon /> : <ChevronUpIcon />}
-                        </Flex>
-                    </Flex>
-                    <Flex w='100%' h='75px' cursor='pointer' align='center' bg='white' 
-                         borderRadius='md' boxShadow='md'  p={4} justify='space-between'
-                            onClick={isOpenBackground ? onBackgroundClose : onBackgroundOpen} >
-                        <Heading as='h4' size='sm' >Accessory</Heading>
-                        <Flex align='center' gap='1rem'>
-                            <Text color='rgb(160,160,160)' >13</Text>
-                            {isOpenBackground ? <ChevronDownIcon /> : <ChevronUpIcon />}
-                        </Flex>
-                    </Flex>
-                    <Flex w='100%' h='75px' cursor='pointer' align='center' bg='white' 
-                         borderRadius='md' boxShadow='md'  p={4} justify='space-between'
-                            onClick={isOpenBackground ? onBackgroundClose : onBackgroundOpen} >
-                        <Heading as='h4' size='sm' >Unique</Heading>
-                        <Flex align='center' gap='1rem'>
-                            <Text color='rgb(160,160,160)' >5</Text>
-                            {isOpenBackground ? <ChevronDownIcon /> : <ChevronUpIcon />}
-                        </Flex>
-                    </Flex>
-                    
-                </Grid>
+                <Box w='100%'>
+                    <Accordion allowToggle>
+                        <AccordionItem>
+                            <AccordionButton h='50px'  bg='white'>
+                                <Box flex='1' textAlign='left'>
+                                    <Heading fontWeight='medium' size='md'>Background</Heading>
+                                </Box>
+                                <Flex gap='0.7rem' align='center'>
+                                    <Text>3</Text>
+                                    <AccordionIcon /> 
+                                </Flex>
+                                
+                            </AccordionButton>
+                            <AccordionPanel pb={4}>
+                                <Flex w='50%' justify='space-between'>
+                                    <Text fontWeight={'medium'}>Attribute</Text> 
+                                    <Text fontWeight={'medium'}>Chance (%)</Text>
+                                </Flex>
+                                <Divider />
+                                {backgrounds.map((type:string, index: number) => 
+                                    <Flex w='50%' justify='space-between'>
+                                        <Text fontWeight={'light'}>{type}</Text> 
+                                        <Text fontWeight={'light'}>{backgroundStats[index].toFixed(1)}%</Text>
+                                    </Flex>
+                                )}
+                            </AccordionPanel>
+                        </AccordionItem>
+                        <AccordionItem>
+                            <AccordionButton h='50px'  bg='white'>
+                                <Box flex='1' textAlign='left'>
+                                    <Heading fontWeight='medium' size='md'>Bear</Heading>
+                                </Box>
+                                <Flex gap='0.7rem' align='center'>
+                                    <Text>6</Text>
+                                    <AccordionIcon /> 
+                                </Flex>
+                                
+                            </AccordionButton>
+                            <AccordionPanel pb={4}>
+                                <Flex w='50%' justify='space-between'>
+                                    <Text fontWeight={'medium'}>Attribute</Text> 
+                                    <Text fontWeight={'medium'}>Chance (%)</Text>
+                                </Flex>
+                                <Divider />
+                                {bearType.map((type:string, index: number) => 
+                                    <Flex w='50%' justify='space-between'>
+                                        <Text fontWeight={'light'}>{type}</Text> 
+                                        <Text fontWeight={'light'}>{bearTypeStats[index].toFixed(1)}%</Text>
+                                    </Flex>
+                                )}
+                            </AccordionPanel>
+                        </AccordionItem>
+                        <AccordionItem>
+                            <AccordionButton h='50px'  bg='white'>
+                                <Box flex='1' textAlign='left'>
+                                    <Heading fontWeight='medium' size='md'>Eyes</Heading>
+                                </Box>
+                                <Flex gap='0.7rem' align='center'>
+                                    <Text>{eye.length}</Text>
+                                    <AccordionIcon /> 
+                                </Flex>
+                            </AccordionButton>
+                            <AccordionPanel pb={4}>
+                                <Flex w='50%' justify='space-between'>
+                                    <Text fontWeight={'medium'}>Attribute</Text> 
+                                    <Text fontWeight={'medium'}>Chance (%)</Text>
+                                </Flex>
+                                <Divider />
+                                {eye.map((type:string, index: number) => 
+                                    <Flex w='50%' justify='space-between'>
+                                        <Text fontWeight={'light'}>{type}</Text> 
+                                        <Text fontWeight={'light'}>{(eyeStats[index]* 2).toFixed(1)}%</Text>
+                                    </Flex>
+                                )}
+                            </AccordionPanel>
+                        </AccordionItem>
+                        <AccordionItem>
+                            <AccordionButton h='50px'  bg='white'>
+                                <Box flex='1' textAlign='left'>
+                                    <Heading fontWeight='medium' size='md'>Mouth</Heading>
+                                </Box>
+                                <Flex gap='0.7rem' align='center'>
+                                    <Text>{mouth.length}</Text>
+                                    <AccordionIcon /> 
+                                </Flex>
+                            </AccordionButton>
+                            <AccordionPanel pb={4}>
+                                <Flex w='50%' justify='space-between'>
+                                    <Text fontWeight={'medium'}>Attribute</Text> 
+                                    <Text fontWeight={'medium'}>Chance (%)</Text>
+                                </Flex>
+                                <Divider />
+                                {mouth.map((type:string, index: number) => 
+                                    <Flex w='50%' justify='space-between'>
+                                        <Text fontWeight={'light'}>{type}</Text> 
+                                        <Text fontWeight={'light'}>{(mouthStats[index]* 2).toFixed(1)}%</Text>
+                                    </Flex>
+                                )}
+                            </AccordionPanel>
+                        </AccordionItem>
+                        <AccordionItem>
+                            <AccordionButton h='50px'  bg='white'>
+                                <Box flex='1' textAlign='left'>
+                                    <Heading fontWeight='medium' size='md'>Hat</Heading>
+                                </Box>
+                                <Flex gap='0.7rem' align='center'>
+                                    <Text>{hat.length}</Text>
+                                    <AccordionIcon /> 
+                                </Flex>
+                                
+                            </AccordionButton>
+                            <AccordionPanel pb={4}>
+                                <Flex w='50%' justify='space-between'>
+                                    <Text fontWeight={'medium'}>Attribute</Text> 
+                                    <Text fontWeight={'medium'}>Chance (%)</Text>
+                                </Flex>
+                                <Divider />
+                                {hat.map((type:string, index: number) => 
+                                    <Flex w='50%' justify='space-between'>
+                                        <Text fontWeight={'light'}>{type}</Text> 
+                                        <Text fontWeight={'light'}>{(hatStats[index] * 2).toFixed(1)}%</Text>
+                                    </Flex>
+                                )}
+                            </AccordionPanel>
+                        </AccordionItem>
+                        <AccordionItem>
+                            <AccordionButton h='50px'  bg='white'>
+                                <Box flex='1' textAlign='left'>
+                                    <Heading fontWeight='medium' size='md'>Body</Heading>
+                                </Box>
+                                <Flex gap='0.7rem' align='center'>
+                                    <Text>{shirt.length}</Text>
+                                    <AccordionIcon /> 
+                                </Flex>
+                                
+                            </AccordionButton>
+                            <AccordionPanel pb={4}>
+                                <Flex w='50%' justify='space-between'>
+                                    <Text fontWeight={'medium'}>Attribute</Text> 
+                                    <Text fontWeight={'medium'}>Chance (%)</Text>
+                                </Flex>
+                                <Divider />
+                                {shirt.map((type:string, index: number) => 
+                                    <Flex w='50%' justify='space-between'>
+                                        <Text fontWeight={'light'}>{type}</Text> 
+                                        <Text fontWeight={'light'}>{(shirtStats[index] * 2).toFixed(1)}%</Text>
+                                    </Flex>
+                                )}
+                            </AccordionPanel>
+                        </AccordionItem>
+                    </Accordion>
+                </Box>
             </Stack>
         </Stack>
-        <Stack m='2rem 0' p={4} boxShadow={'lg'} bg='rgb(245,245,245)' borderRadius='lg' align='center' justify='center'>
+        <Stack m='2rem 0' p={6} bg='rgb(245,245,245)' align='center' justify='center'>
             <Heading>
                 Whitepaper
             </Heading>
@@ -205,41 +312,72 @@ export default function Landing() {
             <VStack w='100%'>
                 <HStack gap='1rem'>
                     <Heading>Pre-Sale</Heading>
-                    <Text>2000 / 15000 Bears</Text>
+                    <Text color='rgb(100,100,100)'>4,000 / 20,000 Bears</Text>
                 </HStack>
+                <Text color='rgb(100,100,100)'>
+                    Stealth Mint
+                </Text>
+                <Text color='rgb(100,100,100)'>
+                    Bear Cost | 0.123 AVAX
+                </Text>
                 <Divider />
-                <Flex w='100%' justify='space-between' gap='1rem' align='center'>
-                    <Heading size='xl'>10%</Heading>
-                    <Text align='right'>100 AVAX Donation to Sierra Club Foundation</Text>
-                </Flex>
                 <Flex w='100%' justify='space-between' gap='1rem' align='center'>
                     <Heading size='xl'>25%</Heading>
                     <Text align='right'>AMA and alpha regarding future projects</Text>
                 </Flex>
                 <Flex w='100%' justify='space-between' gap='1rem' align='center'>
                     <Heading size='xl'>50%</Heading>
-                    <Text align='right'>200 AVAX Donation to Sierra Club Foundation</Text>
+                    <Text align='right'>100 AVAX Donation to Sierra Club Foundation</Text>
                 </Flex>
                 <Flex w='100%' justify='space-between' gap='1rem' align='center'>
                     <Heading size='xl'>100%</Heading>
-                    <Text align='right'>One Free Mint For Future Projects</Text>
+                    <Text align='right'>Experiment Begins</Text>
                 </Flex>
                 <Divider />
-                <HStack gap='1rem'>
-                    <Heading>Game</Heading>
-                    <Text>Possible outcomes</Text>
-                </HStack>
-                <Divider />
-                <Flex w='100%' justify='space-between' align='center'>
-                    <Heading>TBD</Heading>
-                    <Text align='right'>Check out Discord for Info</Text>
-                </Flex>
-            
             </VStack>
         </Stack>
-        <Stack>
-            
+        <Stack m='2rem 0' p={6} align='center' justify='center'>
+            <HStack gap='1rem'>
+                <Heading>Game</Heading>
+                <Text color='rgb(100,100,100)' >16,000 / 20,000 Bears</Text>
+            </HStack>
+            <Text color='rgb(100,100,100)'>
+                1 $FISH = 1 $FISH
+            </Text>
+            <Text color='rgb(100,100,100)'>
+                Bear Cost | 100 $FISH
+            </Text>
+            <br></br>
+            <Grid gap='2rem' templateColumns={{xsm: '1fr', md: '1fr 1fr', lg: '1fr 1fr', xl: '1fr 1fr'}}>
+                <Stack  p={4} align='center' justify='start'>
+                    <Heading>
+                        Win
+                    </Heading>
+                    <Text color='rgb(100,100,100)' >Survive 69 Epochs</Text>
+                    <Divider />
+                    <Image w='300px' src={allThree} alt='grid-pic' />
+                    <Divider />
+                    <Text color='rgb(100,100,100)'  align='center' size='sm'>
+                        Dont Deplete the River for 69 Epochs
+                    </Text>
+                </Stack>
+                <Stack p={4} align='center' justify='start'>
+                    <Heading>
+                        Loss
+                    </Heading>
+                    <Text color='rgb(100,100,100)' >Overfish The River</Text>
+                    <Divider />
+                    <Image w='300px' src={allThree} alt='grid-pic' />
+                    <Divider />
+                    <Text color='rgb(100,100,100)'  align='center' size='sm'>
+                        River goes empty before 69 Epochs
+                    </Text>
+                </Stack>
+            </Grid>
         </Stack>
+        <Stack w='100%' p={6} bg='rgb(240,240,240)'>
+            <Heading>Footer</Heading>
+        </Stack>            
     </Box>
   )
 }

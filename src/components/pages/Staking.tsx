@@ -193,7 +193,7 @@ export default function Staking() {
           dispatch({type: 'UPDATE_PEACEFUL_NUM', payload: pNum});
           dispatch({type: 'UPDATE_HUNGRY_NUM', payload: hNum});
           dispatch({type: 'UPDATE_FRENZY_NUM', payload: fNum});
-        })
+        },1000)
         
 
     } catch (error:any) {
@@ -277,7 +277,7 @@ export default function Staking() {
           dispatch({type: 'UPDATE_PEACEFUL_NUM', payload: pNum});
           dispatch({type: 'UPDATE_HUNGRY_NUM', payload: hNum});
           dispatch({type: 'UPDATE_FRENZY_NUM', payload: fNum});
-        })
+        }, 1000)
         
     } catch (error:any) {
       if (error.code != 4001)
@@ -318,7 +318,7 @@ export default function Staking() {
         const [ balance, rewards, allowance, paused ] = await getTokenInfo(address);
         dispatch({type: 'UPDATE_BALANCE', payload: balance});
         dispatch({type: 'UPDATE_CLAIMABLE', payload: rewards});
-      })
+      },1000)
       
     } catch (error:any) {
       if (error.code != 4001)
