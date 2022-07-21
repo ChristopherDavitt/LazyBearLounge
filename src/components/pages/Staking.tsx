@@ -373,8 +373,8 @@ export default function Staking() {
           <Skeleton h='20px' w='90%' fadeDuration={1} isLoaded={connected}> 
             <Text
               fontSize='lg'
-              fontWeight='light'
-              color='rgb(90,90,90)'
+              fontWeight='medium'
+              color='rgb(160,160,160)'
               align='center'>
               {epoch}
             </Text>
@@ -410,10 +410,10 @@ export default function Staking() {
           <Skeleton h='20px' w='90%' fadeDuration={1} isLoaded={connected}>
             <Text
               fontSize='lg'
-              fontWeight='light'
-              color='rgb(90,90,90)'
+              fontWeight='medium'
+              color='rgb(160,160,160)'
               align='center'>
-              {balance}
+              {(balance / (10 ** 18)).toFixed(2)} $FISH
             </Text>
           </Skeleton>
           <Heading 
@@ -424,13 +424,14 @@ export default function Staking() {
             Claim Rewards
           </Heading>
           <HStack align='center' justify='space-between'>
-            <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
+            <Skeleton h='24px' w='100%' fadeDuration={1} isLoaded={connected}>
               <Text 
-                fontSize='md'
-                color='rgb(60,60,60)'
+                fontSize='lg'
+                fontWeight='medium'
+                color='rgb(160,160,160)'
                 align='center'
                 >
-                {claimable} mFISH
+                {claimable} $FISH
               </Text >
             </Skeleton>
             <Button 
@@ -573,7 +574,7 @@ export default function Staking() {
       <Box
         w='calc(100vw - 40px)'
         maxW='1200px' 
-        minH='640px'
+        minH='690px'
         h={{xsm: '1007px', sm: 'calc(100vh - 150px)'}}
         maxH={{sm: '730px'}}
         borderRadius='lg'
@@ -618,7 +619,7 @@ export default function Staking() {
               </Hide>
              
               {approvedNFT ? 
-                <Stack direction={{xsm: 'column', md: 'row'}}>
+                <Grid templateColumns={{xsm: '1fr' ,sm: '1fr 1fr ', md: '1fr 1fr 1fr'}}>
                   <Button 
                     h='30px'
                     variant={'outline'}
@@ -649,7 +650,7 @@ export default function Staking() {
                     _hover={{backgroundColor: 'rgb(245,245,245)'}}>
                     Frenzy
                   </Button>
-                </Stack>
+                </Grid>
 
                 :
 
@@ -678,7 +679,7 @@ export default function Staking() {
             )}
           </HStack>
           <Hide below='sm'>
-            <HStack w='100%' justify='space-between' h='calc(100% - 160px)'>
+            <HStack w='100%' justify='space-between' h={{sm: 'calc(100% - 250px)', md: 'calc(100% - 220px)'}}>
               <VStack w={{md: '160px', lg: '280px'}} h='100%'>
                 <HStack w='100%' justify='space-between' align='baseline'>
                   <Heading size='lg'>Peaceful</Heading>
@@ -712,7 +713,7 @@ export default function Staking() {
                     </Button>
                   </Stack>
                 </HStack>
-                <Grid justifyItems='center' templateColumns={{ lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                <Grid justifyItems='center' templateColumns={{ lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
                   {peacefulBool.map((bool:boolean, index:number) => 
                     <Stack key={index + 15000} onClick={() => clickNftPeaceful(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
                             bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>

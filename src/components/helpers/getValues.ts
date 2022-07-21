@@ -37,6 +37,7 @@ export const getTokenInfo = async( address:any) => {
         const allowance = await stakingContract.allowance(address, nft);
         const parsedAllowance = parseInt(allowance._hex, 16);
         const paused = await stakingContract.paused();
+        console.log(paused)
         return [parsedBalance, parsedRewards, parsedAllowance, paused]
     } catch (error) {
         console.log('Gettings Balance' + error)

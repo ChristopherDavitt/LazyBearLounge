@@ -3,7 +3,8 @@ import { Button, Stack, Text, useToast } from '@chakra-ui/react';
 
 import { staking } from './contracts';
 import { stakingABI } from './abis';
-import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { getTokenInfo } from './getValues';
 
 
 export default function Timer(props: any) {
@@ -13,20 +14,22 @@ export default function Timer(props: any) {
 
     const connected = useAppSelector((state) => state.connected);
     const paused = useAppSelector((state) => state.stakingPaused);
+    const address = useAppSelector((state) => state.address);
+
     const toast = useToast();
+    const dispatch = useAppDispatch();
     
     useEffect(() => {
         if (props.time > 0) {
             var intervalId = setInterval(() => {
                 var date = Date.now();
-                const newTimer:number = ((4 * 60 * 60) + props.time) - (date/1000); 
+                const newTimer:number = ((4 * 60 * 60) + props.time) - (Math.trunc(date/1000)); 
                 if (newTimer < 0) {
                     clearInterval(intervalId);
                     setTimer(0);
                     setEpochButton(true)
                 } else {
-                    console.log(newTimer);
-                    setTimer(newTimer);  
+                    setTimer(parseInt(String(newTimer)));  
                 }
             }, 1000)
         }
@@ -55,7 +58,15 @@ export default function Timer(props: any) {
               status: 'success',
               position: 'top-right',
               isClosable: true
-            }) 
+            });
+            setTimeout(async () => {
+                const [ balance, rewards, allowance, paused ] = await getTokenInfo(address);
+                console.log([ balance, rewards ])
+                dispatch({type: 'UPDATE_BALANCE', payload: balance});
+                dispatch({type: 'UPDATE_CLAIMABLE', payload: rewards});
+                dispatch({type: 'UPDATE_APPROVAL_TOKEN', payload: allowance});
+                dispatch({type: 'UPDATE_RIVER_PAUSED', payload: paused});
+            },1000)
         } catch (error:any) {
           if (error.code != 4001)
             toast({
@@ -73,11 +84,11 @@ export default function Timer(props: any) {
         {!epochButton ?  
             <Text 
                 fontSize='lg'
-                fontWeight='light'
-                color='rgb(90,90,90)'
+                fontWeight='medium'
+                color='rgb(160,160,160)'
                 align='center'
             >
-                0{timer / 3600} : {(timer / 60) % 60 < 10 && '0'}{(timer / 60) % 60} : {timer % 60 < 10 && '0'}{timer % 60}
+                0{Math.trunc(timer / 3600)} : {(timer / 60) % 60 < 10 && '0'}{Math.trunc((timer / 60) % 60)} : {timer % 60 < 10 && '0'}{Math.trunc(timer % 60)}
             </Text>
 
             : 
@@ -89,7 +100,7 @@ export default function Timer(props: any) {
                 bg='white'
                 boxShadow={'md'}
                 _hover={{backgroundColor: 'rgb(245,245,245)'}}
-                disabled={!connected} onClick={() => changeTheEpoch()}
+                disabled={paused || !connected} onClick={() => changeTheEpoch()}
             >
                 Change Epoch
             </Button>

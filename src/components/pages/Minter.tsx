@@ -33,13 +33,13 @@ export default function Minter() {
   const connected = useAppSelector((state) => state.connected);
   const claimable = useAppSelector((state) => state.claimable);
   
-  const costAvax = 0.01;
+  const costAvax = 0.123;
   const costFish = 100;
   
   const [amount, setAmount] = useState(1);
 
   const addAmount = () => {
-    if (amount < 5) {
+    if (amount < 10) {
       setAmount(amount + 1);
     }
   }
@@ -163,10 +163,10 @@ export default function Minter() {
       <Stack justify='center' align={'center'} spacing={0}>
         <Heading>Pre-Sale</Heading>
         <Text fontSize='14px' align='center' color='rgb(160,160,160)'>
-          First 2000 Bears minted with Avax before the experiment begins
+          First 4000 Bears minted with Avax before the experiment begins
         </Text>
         <Text fontSize='14px' align='center' color='rgb(160,160,160)'>
-          2 AVAX per Lazy Bear
+          0.123 AVAX per Lazy Bear
         </Text>
       </Stack>
       <Stack p={4} direction={{xsm: 'column-reverse', sm: 'column-reverse',md: 'row'}} justify='space-around' gap='2rem'>
@@ -196,7 +196,7 @@ export default function Minter() {
                   icon={<MinusIcon w={3} h={3} />} onClick={() => subAmount()}
                 />
               </Flex>
-              <Button onClick={()=>setAmount(5)}>Max</Button>
+              <Button onClick={()=>setAmount(10)}>Max</Button>
             </Flex>
             <Divider />
             <Flex justify='space-between'>

@@ -221,7 +221,7 @@ export default function Navbar() {
               sx={{fontWeight: '600', fontSize: '18px', color: 'rgb(150,150,150)'}}
               isExternal={true}
               display={{xsm: 'none', sm:'inherit', md: 'inherit', lg:'inherit' }}
-              href='https://github.com'
+              href='https://lazybearriver.gitbook.io/doc/'
               >
               Docs
             </Link>
