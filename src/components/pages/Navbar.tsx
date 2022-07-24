@@ -235,7 +235,7 @@ export default function Navbar() {
               h='36px'
               variant='unstyled'
               sx={{backgroundColor: 'rgb(254,249,244)', color: 'rgb(232,65,66)', cursor: 'text'}}>
-              Avalanche
+              Fuji
             </Button>
             <Button
               w='140px'
@@ -298,7 +298,7 @@ export default function Navbar() {
           </ScaleFade>
         ) : null}
       </Box>
-      {isModalOpen && <CloseWalletModal disconnect={disconnectWallet} closeModal={onModalClose} />}
+      <CloseWalletModal disconnect={disconnectWallet} isOpen={isModalOpen} closeModal={onModalClose} />
     </>
   )
 }

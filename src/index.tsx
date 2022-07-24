@@ -3,11 +3,30 @@ import ReactDOM from 'react-dom/client';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { FirebaseAppProvider } from 'reactfire';
 
 import { store } from './components/store/store';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+
+// const firebaseConfig = {
+//   apiKey: "XXXXXXXXXXXXXXXXXXX",
+//   authDomain: "lazybearriver.firebaseapp.com",
+//   projectId: "lazybearriver",
+//   storageBucket: "lazybearriver.appspot.com",
+//   messagingSenderId: "XXXXXXXXXXXXXX",
+//   appId: "XXXXXXXXXXXXXXXXXXXXXXX",
+//   measurementId: "XXXXXXXXXXXXXX"
+// };
+
+// Initialize Firebase
+// const app = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);
 
 const breakpoints = {
   xsm: '30px',
@@ -26,13 +45,15 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
+    {/* <FirebaseAppProvider firebaseConfig={firebaseConfig}> */}
       <Provider store={store}>
-        <Router>
-          <App />
-        </Router>
+        <ChakraProvider theme={theme}>
+          <Router>
+            <App />
+          </Router>
+        </ChakraProvider>
       </Provider>
-    </ChakraProvider>
+    {/* </FirebaseAppProvider> */}
   </React.StrictMode>
 );
 
