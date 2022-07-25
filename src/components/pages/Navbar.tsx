@@ -25,7 +25,7 @@ import { getNFTData, getStaked,
          getEpoch, getTokenInfo } from '../helpers/getValues';
 import CloseWalletModal from '../helpers/CloseWalletModal';
 
-export default function Navbar() {
+export default function Navbar(props:any) {
 
   const { 
     isOpen: isNavOpen, 
@@ -38,7 +38,6 @@ export default function Navbar() {
     onClose: onModalClose 
   } = useDisclosure();
 
-  const [selected, setSelected] = useState<string>('home');
   const [connButtonText, setConnButtonText] = useState('Connect Wallet');
   const [error, setError] = useState();
   
@@ -191,8 +190,7 @@ export default function Navbar() {
               as={RouterLink} 
               to='/'
               style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-              sx={{fontWeight: `${selected == 'home' ? '700' : '600'}`, fontSize: '18px', color: `${selected == 'home' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
-              onClick={() => setSelected('home')}
+              sx={{fontWeight: `${props.highlight == '/' ? '700' : '600'}`, fontSize: '18px', color: `${props.highlight == '/' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
               >
               Home
             </Link>
@@ -201,8 +199,8 @@ export default function Navbar() {
               display={{xsm: 'none', sm:'inherit', md: 'inherit', lg:'inherit' }}
               to='/staking'
               style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-              sx={{fontWeight: `${selected == 'staking' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'staking' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
-              onClick={() => setSelected('staking')}
+              sx={{fontWeight: `${props.highlight == '/staking' ? '700' : '600'}`, fontSize: '18px',  color: `${props.highlight == '/staking' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
+             
               >
               Staking
             </Link>
@@ -211,8 +209,8 @@ export default function Navbar() {
               display={{xsm: 'none', sm:'inherit', md: 'inherit', lg:'inherit' }}
               to='/mint'
               style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-              sx={{fontWeight: `${selected == 'mint' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'mint' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
-              onClick={() => setSelected('mint')}
+              sx={{fontWeight: `${props.highlight == '/mint' ? '700' : '600'}`, fontSize: '18px',  color: `${props.highlight == '/mint' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
+              
               >
               Mint
             </Link>
@@ -261,27 +259,24 @@ export default function Navbar() {
                   
                   as={RouterLink} 
                   to='/'
-                  onClick={() => setSelected('home')}
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-                  sx={{fontWeight: `${selected == 'home' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'home' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
+                  sx={{fontWeight: `${props.highlight == '/' ? '700' : '600'}`, fontSize: '18px',  color: `${props.highlight == '/' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
                   >
                   Home
                 </Link>
                 <Link 
                   as={RouterLink} 
                   to='/staking'
-                  onClick={() => setSelected('staking')}
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-                  sx={{fontWeight: `${selected == 'staking' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'staking' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
+                  sx={{fontWeight: `${props.highlight == '/staking' ? '700' : '600'}`, fontSize: '18px',  color: `${props.highlight == '/staking' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
                   >
                   Staking
                 </Link>
                 <Link 
                   as={RouterLink} 
                   to='/mint'
-                  onClick={() => setSelected('mint')}
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-                  sx={{fontWeight: `${selected == 'mint' ? '700' : '600'}`, fontSize: '18px',  color: `${selected == 'mint' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
+                  sx={{fontWeight: `${props.highlight == '/mint' ? '700' : '600'}`, fontSize: '18px',  color: `${props.highlight == '/mint' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
                   >
                   Mint
                 </Link>

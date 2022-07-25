@@ -1,21 +1,24 @@
 import React from 'react';
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import { FaDiscord, FaTwitter, FaGithub } from 'react-icons/fa'
 import { Stack, Image, Box, Grid,
         Text, Heading, VStack, 
         HStack, Button, Divider, 
-        Flex, useDisclosure,
+        Flex, Icon,
         Accordion, AccordionItem,
         AccordionButton, AccordionPanel,
         AccordionIcon,
-        background, } from '@chakra-ui/react';
+        Link,
+        } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import hero from '../assets/images/43.png';
-import stakingGif from '../assets/images/stakingMethods.png';
+import stakingMethods from '../assets/images/stakingMethods.png';
 import exponential from '../assets/images/exponential.png';
 import allThree from '../assets/images/allThree.png';
 import collect from '../assets/images/40.png';
 import selectBear from '../assets/images/selectBear.png';
+import win from '../assets/images/Wint.png';
+import loss from '../assets/images/Losst.png';
 
 export default function Landing() {
 
@@ -72,6 +75,26 @@ export default function Landing() {
                         </Button>
                     </RouterLink>
                 </Flex>
+                <HStack w='100%' justify='left' gap='1rem' >
+                    <Link 
+                    //   isExternal={true}
+                    href='#'
+                    >
+                    <Box size={'32px'} as={FaTwitter} />
+                    </Link>
+                    <Link 
+                    //   isExternal={true}
+                    href='#'
+                    >
+                    <Box size={'32px'} as={FaDiscord} />
+                    </Link>
+                    <Link 
+                    //   isExternal={true}
+                    href='#'
+                    >
+                    <Box size={'32px'} as={FaGithub} />
+                    </Link>
+                </HStack>   
             </VStack>
         </Stack>
         <Stack m='2rem 0' p={6} bg='rgb(245,245,245)' align='center' justify='center' gap='2rem'>
@@ -91,7 +114,7 @@ export default function Landing() {
                         Staking
                     </Heading>
                     <Divider />
-                    <Image src={stakingGif} alt='grid-pic' />
+                    <Image src={stakingMethods} alt='grid-pic' />
                     <Divider />
                     <Text color='rgb(100,100,100)'  align='center' size='sm'>
                         Choose your own strategy on your quest for $FISH
@@ -170,7 +193,7 @@ export default function Landing() {
                                 </Flex>
                                 <Divider />
                                 {backgrounds.map((type:string, index: number) => 
-                                    <Flex w='50%' justify='space-between'>
+                                    <Flex key={index} w='50%' justify='space-between'>
                                         <Text fontWeight={'light'}>{type}</Text> 
                                         <Text fontWeight={'light'}>{backgroundStats[index].toFixed(1)}%</Text>
                                     </Flex>
@@ -195,7 +218,7 @@ export default function Landing() {
                                 </Flex>
                                 <Divider />
                                 {bearType.map((type:string, index: number) => 
-                                    <Flex w='50%' justify='space-between'>
+                                    <Flex key={index + 7} w='50%' justify='space-between'>
                                         <Text fontWeight={'light'}>{type}</Text> 
                                         <Text fontWeight={'light'}>{bearTypeStats[index].toFixed(1)}%</Text>
                                     </Flex>
@@ -219,7 +242,7 @@ export default function Landing() {
                                 </Flex>
                                 <Divider />
                                 {eye.map((type:string, index: number) => 
-                                    <Flex w='50%' justify='space-between'>
+                                    <Flex key={index + 100} w='50%' justify='space-between'>
                                         <Text fontWeight={'light'}>{type}</Text> 
                                         <Text fontWeight={'light'}>{(eyeStats[index]* 2).toFixed(1)}%</Text>
                                     </Flex>
@@ -243,7 +266,7 @@ export default function Landing() {
                                 </Flex>
                                 <Divider />
                                 {mouth.map((type:string, index: number) => 
-                                    <Flex w='50%' justify='space-between'>
+                                    <Flex key={index + 200} w='50%' justify='space-between'>
                                         <Text fontWeight={'light'}>{type}</Text> 
                                         <Text fontWeight={'light'}>{(mouthStats[index]* 2).toFixed(1)}%</Text>
                                     </Flex>
@@ -268,7 +291,7 @@ export default function Landing() {
                                 </Flex>
                                 <Divider />
                                 {hat.map((type:string, index: number) => 
-                                    <Flex w='50%' justify='space-between'>
+                                    <Flex key={index + 300} w='50%' justify='space-between'>
                                         <Text fontWeight={'light'}>{type}</Text> 
                                         <Text fontWeight={'light'}>{(hatStats[index] * 2).toFixed(1)}%</Text>
                                     </Flex>
@@ -293,7 +316,7 @@ export default function Landing() {
                                 </Flex>
                                 <Divider />
                                 {shirt.map((type:string, index: number) => 
-                                    <Flex w='50%' justify='space-between'>
+                                    <Flex key={index + 400} w='50%' justify='space-between'>
                                         <Text fontWeight={'light'}>{type}</Text> 
                                         <Text fontWeight={'light'}>{(shirtStats[index] * 2).toFixed(1)}%</Text>
                                     </Flex>
@@ -355,7 +378,7 @@ export default function Landing() {
                     </Heading>
                     <Text color='rgb(100,100,100)' >Survive 69 Epochs</Text>
                     <Divider />
-                    <Image w='300px' src={allThree} alt='grid-pic' />
+                    <Image w='300px' src={win} alt='grid-pic' />
                     <Divider />
                     <Text color='rgb(100,100,100)'  align='center' size='sm'>
                         Dont Deplete the River for 69 Epochs
@@ -367,7 +390,7 @@ export default function Landing() {
                     </Heading>
                     <Text color='rgb(100,100,100)' >Overfish The River</Text>
                     <Divider />
-                    <Image w='300px' src={allThree} alt='grid-pic' />
+                    <Image w='300px' src={loss} alt='grid-pic' />
                     <Divider />
                     <Text color='rgb(100,100,100)'  align='center' size='sm'>
                         River goes empty before 69 Epochs
@@ -375,9 +398,28 @@ export default function Landing() {
                 </Stack>
             </Grid>
         </Stack>
-        <Stack w='100%' p={6} bg='rgb(240,240,240)'>
-            <Heading>Footer</Heading>
-        </Stack>            
+        <Stack p={6} bg='rgb(240,240,240)'>
+             <HStack w='100%' justify='center' gap='1rem' >
+                <Link 
+                //   isExternal={true}
+                  href='#'
+                  >
+                  <Box size={'32px'} as={FaTwitter} />
+                </Link>
+                <Link 
+                //   isExternal={true}
+                  href='#'
+                  >
+                  <Box size={'32px'} as={FaDiscord} />
+                </Link>
+                <Link 
+                //   isExternal={true}
+                  href='#'
+                  >
+                  <Box size={'32px'} as={FaGithub} />
+                </Link>
+            </HStack>    
+        </Stack>  
     </Box>
   )
 }
