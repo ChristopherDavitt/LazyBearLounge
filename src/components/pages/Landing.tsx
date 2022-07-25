@@ -90,7 +90,7 @@ export default function Landing() {
                     </Link>
                     <Link 
                     //   isExternal={true}
-                    href='#'
+                    href='https://lazybearriver.gitbook.io/docs/'
                     >
                     <Box size={'32px'} as={FaGithub} />
                     </Link>
@@ -328,22 +328,22 @@ export default function Landing() {
             </Stack>
         </Stack>
         <Stack m='2rem 0' p={6} bg='rgb(245,245,245)' align='center' justify='center'>
-            <Heading>
+            {/* <Heading>
                 Whitepaper
             </Heading>
-            <Divider w='300px' />
+            <Divider w='300px' /> */}
             <VStack w='100%'>
+                <Text fontWeight='bold' color='rgb(100,100,100)'>
+                    Stealth Mint
+                </Text>
+                <Text fontWeight='bold' color='rgb(100,100,100)'>
+                    Bear Cost | 0.123 AVAX
+                </Text>
                 <HStack gap='1rem'>
                     <Heading>Pre-Sale</Heading>
                     <Text color='rgb(100,100,100)'>4,000 / 20,000 Bears</Text>
                 </HStack>
-                <Text color='rgb(100,100,100)'>
-                    Stealth Mint
-                </Text>
-                <Text color='rgb(100,100,100)'>
-                    Bear Cost | 0.123 AVAX
-                </Text>
-                <Divider />
+                <Divider w='300px' />
                 <Flex w='100%' justify='space-between' gap='1rem' align='center'>
                     <Heading size='xl'>25%</Heading>
                     <Text align='right'>AMA and alpha regarding future projects</Text>
@@ -356,30 +356,29 @@ export default function Landing() {
                     <Heading size='xl'>100%</Heading>
                     <Text align='right'>Experiment Begins</Text>
                 </Flex>
-                <Divider />
             </VStack>
         </Stack>
         <Stack m='2rem 0' p={6} align='center' justify='center'>
+            <Text fontWeight='bold' color='rgb(100,100,100)'>
+                1 $FISH = 1 $FISH
+            </Text>
+            <Text fontWeight='bold' color='rgb(100,100,100)'>
+                Bear Cost | 100 $FISH
+            </Text>
             <HStack gap='1rem'>
                 <Heading>Game</Heading>
                 <Text color='rgb(100,100,100)' >16,000 / 20,000 Bears</Text>
             </HStack>
-            <Text color='rgb(100,100,100)'>
-                1 $FISH = 1 $FISH
-            </Text>
-            <Text color='rgb(100,100,100)'>
-                Bear Cost | 100 $FISH
-            </Text>
-            <br></br>
-            <Grid gap='2rem' templateColumns={{xsm: '1fr', md: '1fr 1fr', lg: '1fr 1fr', xl: '1fr 1fr'}}>
+            <Divider w='300px' />
+            <Grid alignContent='space-around' w='100%' templateColumns={{xsm: '1fr', md: '1fr 1fr', lg: '1fr 1fr', xl: '1fr 1fr'}}>
                 <Stack  p={4} align='center' justify='start'>
                     <Heading>
                         Win
                     </Heading>
                     <Text color='rgb(100,100,100)' >Survive 69 Epochs</Text>
-                    <Divider />
+                    <Divider w='300px' />
                     <Image w='300px' src={win} alt='grid-pic' />
-                    <Divider />
+                    <Divider w='300px' />
                     <Text color='rgb(100,100,100)'  align='center' size='sm'>
                         Dont Deplete the River for 69 Epochs
                     </Text>
@@ -389,9 +388,9 @@ export default function Landing() {
                         Loss
                     </Heading>
                     <Text color='rgb(100,100,100)' >Overfish The River</Text>
-                    <Divider />
+                    <Divider w='300px' />
                     <Image w='300px' src={loss} alt='grid-pic' />
-                    <Divider />
+                    <Divider w='300px' />
                     <Text color='rgb(100,100,100)'  align='center' size='sm'>
                         River goes empty before 69 Epochs
                     </Text>
@@ -414,7 +413,7 @@ export default function Landing() {
                 </Link>
                 <Link 
                 //   isExternal={true}
-                  href='#'
+                  href='https://lazybearriver.gitbook.io/docs/'
                   >
                   <Box size={'32px'} as={FaGithub} />
                 </Link>

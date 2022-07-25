@@ -23,7 +23,7 @@ import logo from '../assets/images/DiscordIcon.png'
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getNFTData, getStaked,
          getEpoch, getTokenInfo } from '../helpers/getValues';
-import CloseWalletModal from '../helpers/CloseWalletModal';
+import CloseWalletModal from './CloseWalletModal';
 
 export default function Navbar(props:any) {
 
@@ -219,7 +219,7 @@ export default function Navbar(props:any) {
               sx={{fontWeight: '600', fontSize: '18px', color: 'rgb(150,150,150)'}}
               isExternal={true}
               display={{xsm: 'none', sm:'inherit', md: 'inherit', lg:'inherit' }}
-              href='https://lazybearriver.gitbook.io/doc/'
+              href='https://lazybearriver.gitbook.io/docs/'
               >
               Docs
             </Link>
@@ -284,7 +284,7 @@ export default function Navbar(props:any) {
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
                   sx={{fontWeight: '600', fontSize: '18px', color: 'rgb(150,150,150)'}}
                   isExternal={true}
-                  href='https://github.com'
+                  href='https://lazybearriver.gitbook.io/docs/'
                   >
                   Docs
                 </Link>

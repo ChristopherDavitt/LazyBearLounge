@@ -32,14 +32,16 @@ export default function Minter() {
   const supply = useAppSelector((state) => state.nftSupply);
   const connected = useAppSelector((state) => state.connected);
   const claimable = useAppSelector((state) => state.claimable);
+  const approvedFish = useAppSelector((state) => state.approvedToken);
   
   const costAvax = 0.123;
   const costFish = 100;
+  const maxAmount = 20;
   
   const [amount, setAmount] = useState(1);
 
   const addAmount = () => {
-    if (amount < 10) {
+    if (amount < maxAmount) {
       setAmount(amount + 1);
     }
   }
@@ -130,7 +132,7 @@ export default function Minter() {
     const stakingContract = new ethers.Contract(staking, stakingABI, signer)
     // Staked Bears
     try {
-        const tx = await stakingContract.approve(nft, 10 ** 27);
+        const tx = await stakingContract.approve(nft, 10 ** 29);
         toast({
             title: 'Transaction Sent',
             description: 'Approving FISH for minting.',
@@ -196,7 +198,7 @@ export default function Minter() {
                   icon={<MinusIcon w={3} h={3} />} onClick={() => subAmount()}
                 />
               </Flex>
-              <Button onClick={()=>setAmount(10)}>Max</Button>
+              <Button onClick={()=>setAmount(maxAmount)}>Max</Button>
             </Flex>
             <Divider />
             <Flex justify='space-between'>
@@ -227,6 +229,86 @@ export default function Minter() {
           </Text>
         </Stack>
       </Stack>
+
+      {/* <Stack justify='center' align={'center'} spacing={0}>
+        <Heading>$FISH Sale</Heading>
+        <Text fontSize='14px' align='center' color='rgb(160,160,160)'>
+          Last 16,000 Bears minted with $FISH
+        </Text>
+        <Text fontSize='14px' align='center' color='rgb(160,160,160)'>
+          100 $FISH per Lazy Bear
+        </Text>
+      </Stack>
+      <Stack p={4} direction={{xsm: 'column-reverse', sm: 'column-reverse',md: 'row'}} justify='space-around' gap='2rem'>
+        <Stack minW='300px' p={4} border='solid 1px rgb(240,240,240)' borderRadius='lg' bg='white'>
+          <Stack mb='2rem' gap='0.5rem'>
+            <Stack justify='start' align='center' spacing={0}>
+              <Heading size='md' color='rgb(50,50,50)' >Mint NFT</Heading>
+              <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
+                <Text size='sm' w='100%' color='gray.300' align='center'>{supply} / 15000</Text>
+              </Skeleton>
+            </Stack>
+            <Flex align='center' justify='space-between'>
+              <Heading color='rgb(50,50,50)' size='sm'>Balance</Heading>
+              <Text>{Math.trunc(balance / (10 ** 18))} $FISH</Text>
+            </Flex>
+            <Divider />
+            <Flex align='center' justify='space-between' gap='0.5rem'>
+              <Heading color='rgb(50,50,50)' size='sm'>Amount</Heading>
+              <Flex align='center' justify='space-between'>
+                <IconButton bg='white' size='sm' boxShadow='sm' 
+                  _hover={{backgroundColor: 'rgb(250,250,250)'}} borderRadius='lg' aria-label='add' 
+                  icon={<AddIcon w={3} h={3} />} onClick={() => addAmount()} 
+                />
+                <Text>{amount}</Text>
+                <IconButton bg='white' size='sm' boxShadow='sm' 
+                  _hover={{backgroundColor: 'rgb(250,250,250)'}} borderRadius='lg' aria-label='subtract' 
+                  icon={<MinusIcon w={3} h={3} />} onClick={() => subAmount()}
+                />
+              </Flex>
+              <Button onClick={()=>setAmount(maxAmount)}>Max</Button>
+            </Flex>
+            <Divider />
+            <Flex justify='space-between'>
+              <Heading color='rgb(50,50,50)' size='sm'>Total</Heading>
+              <Text>{costFish * amount} $FISH</Text>
+            </Flex>
+            <Divider />
+          </Stack>
+          {approvedFish > 10**23 ?
+            
+            <Button onClick={() => approveFish()} disabled={!connected} mt='2rem'>
+              Approve $FISH
+            </Button>
+
+            : 
+
+            <Button onClick={() => mintFish(amount)} disabled={!connected || (costFish * amount) > (balance / (10 ** 18))} mt='2rem'>
+              Mint
+            </Button>
+          
+          }
+          
+          {!connected ?
+            <Text  align='center' w='280px' color='rgb(160,160,160)' fontSize='12px' pl='1rem' lineHeight='16px'>
+              Connect Your Wallet to Mint
+            </Text>
+
+            :
+
+            <Text  align='center' w='280px' color='rgb(160,160,160)' fontSize='12px' pl='1rem' lineHeight='16px'>
+              Mint {amount} Bears at {costFish * amount} AVAX
+            </Text>
+          }
+        </Stack>
+        <Stack>
+          <Image w='300px' h='300px' bg='white' borderRadius='lg' src={minterImg} alt='gif' /> 
+          <Text align='center' w='280px' color='rgb(160,160,160)' fontSize='12px' pl='1rem' lineHeight='16px'>
+            Mint and Stake your Bear on the river to earn the tasty reward of FISH 
+          </Text>
+        </Stack>
+      </Stack> */}
+     
     </Stack>
   )
 }
