@@ -475,7 +475,7 @@ export default function Staking() {
               w={String(riverSupply / 271828 * 100) + '%'}
               h='100%'
               borderLeftRadius='7px'
-              bg={riverSupply / 271828 * 100 > 60 ? 'green.200' : 'red.200'}
+              bg={riverSupply / 271828 * 100 > 80 ? 'green.200' : riverSupply / 271828 * 100 > 45 ? 'yellow.200' : 'red.200'}
               justify='center'
               align='center'>
               <Text

@@ -77,19 +77,19 @@ export default function Landing() {
                 </Flex>
                 <HStack w='100%' justify='left' gap='1rem' >
                     <Link 
-                    //   isExternal={true}
-                    href='#'
+                      isExternal={true}
+                    href='https://twitter.com/LazyBearRiver'
                     >
                     <Box size={'32px'} as={FaTwitter} />
                     </Link>
                     <Link 
-                    //   isExternal={true}
+                      isExternal={true}
                     href='#'
                     >
                     <Box size={'32px'} as={FaDiscord} />
                     </Link>
                     <Link 
-                    //   isExternal={true}
+                      isExternal={true}
                     href='https://lazybearriver.gitbook.io/docs/'
                     >
                     <Box size={'32px'} as={FaGithub} />
@@ -400,19 +400,19 @@ export default function Landing() {
         <Stack p={6} bg='rgb(240,240,240)'>
              <HStack w='100%' justify='center' gap='1rem' >
                 <Link 
-                //   isExternal={true}
-                  href='#'
+                  isExternal={true}
+                  href='https://twitter.com/LazyBearRiver'
                   >
                   <Box size={'32px'} as={FaTwitter} />
                 </Link>
                 <Link 
-                //   isExternal={true}
+                  isExternal={true}
                   href='#'
                   >
                   <Box size={'32px'} as={FaDiscord} />
                 </Link>
                 <Link 
-                //   isExternal={true}
+                  isExternal={true}
                   href='https://lazybearriver.gitbook.io/docs/'
                   >
                   <Box size={'32px'} as={FaGithub} />

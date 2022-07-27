@@ -22,7 +22,8 @@ import { useToast } from '@chakra-ui/react';
 import { stakingABI, nftABI } from '../helpers/abis';
 import {staking, nft} from '../helpers/contracts';
 import minterImg from '../assets/images/Minter.png';
-import { useAppSelector } from '../store/hooks';
+import { useAppSelector, useAppDispatch } from '../store/hooks';
+import { getNFTData } from '../helpers/getValues';
 
 export default function Minter() {
 
@@ -33,12 +34,16 @@ export default function Minter() {
   const connected = useAppSelector((state) => state.connected);
   const claimable = useAppSelector((state) => state.claimable);
   const approvedFish = useAppSelector((state) => state.approvedToken);
-  
+  const address = useAppSelector((state) => state.address);
+  const paused = useAppSelector((state) => state.nftPaused);
+
   const costAvax = 0.123;
   const costFish = 100;
   const maxAmount = 20;
   
   const [amount, setAmount] = useState(1);
+  const dispatch = useAppDispatch();
+
 
   const addAmount = () => {
     if (amount < maxAmount) {
@@ -61,31 +66,36 @@ export default function Minter() {
     try {
       const tx = await nftContract.mintPresale(_amount, {value: ethers.utils.parseEther(String(value))});
       toast({
-          title: 'Transaction Sent',
-          description: `Minting ${_amount} Bears`,
-          status: 'info',
-          duration: 4000,
-          isClosable: true,
-          position: 'top-right'
+        title: 'Transaction Sent',
+        description: `Minting ${_amount} Bears`,
+        status: 'info',
+        duration: 4000,
+        isClosable: true,
+        position: 'top-right'
       })
       await tx.wait()
       toast({
-          title: 'Transaction Success',
-          description: 'Welcome to the river!',
-          status: 'success',
-          duration: 4000,
-          isClosable: true,
-          position: 'top-right',
-          
-        }) 
+        title: 'Transaction Success',
+        description: 'Welcome to the river!',
+        status: 'success',
+        duration: 4000,
+        isClosable: true,
+        position: 'top-right',
+      });
+      setTimeout(async () => {
+        const [ nfts, supply, approved, paused ] = await getNFTData(address);
+        console.log([ nfts, supply, approved ])
+        dispatch({type: 'UPDATE_NFTS_UNSTAKED', payload: nfts});
+        dispatch({type: 'UPDATE_NFTS_SUPPLY', payload: supply});
+      },1000) 
     } catch (error) {
       toast({
-          title: 'Transaction Failed',
-          description: 'TXN Failed. If problem persists please notify.',
-          status: 'error',
-          duration: 4000,
-          isClosable: true,
-          position: 'top-right'
+        title: 'Transaction Failed',
+        description: 'TXN Failed. If problem persists please notify.',
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+        position: 'top-right'
       })
       console.log(error)
     }
@@ -112,7 +122,17 @@ export default function Minter() {
         status: 'success',
         isClosable: true,
         position: 'top-right'
-      }) 
+      });
+      setTimeout(async () => {
+        const [ nfts, supply, approved, paused ] = await getNFTData(address);
+        console.log([ nfts, supply, approved ])
+        dispatch({type: 'UPDATE_NFTS_UNSTAKED', payload: nfts});
+        dispatch({type: 'UPDATE_NFTS_SUPPLY', payload: supply});
+        window.ethereum.request({method: 'eth_getBalance', params: [address, 'latest']})
+        .then((balance: any) => {
+          dispatch({type: "UPDATE_AVAX", payload: Number(ethers.utils.formatEther(balance)).toFixed(4)})
+        })
+      },1000) 
     } catch (error) {
       toast({
         title: 'Transaction Failed',
@@ -132,31 +152,32 @@ export default function Minter() {
     const stakingContract = new ethers.Contract(staking, stakingABI, signer)
     // Staked Bears
     try {
-        const tx = await stakingContract.approve(nft, 10 ** 29);
-        toast({
-            title: 'Transaction Sent',
-            description: 'Approving FISH for minting.',
-            status: 'info',
-            position: 'top-right',
-            isClosable: true
-        })
-        await tx.wait()
-        toast({
-            title: 'Transaction Success',
-            description: 'FISH Approved.',
-            status: 'success',
-            position: 'top-right',
-            isClosable: true
-        }) 
+      const tx = await stakingContract.approve(nft, ethers.BigNumber.from("0x1431E0FAE6D7217CAA0000000"));
+      toast({
+        title: 'Transaction Sent',
+        description: 'Approving FISH for minting.',
+        status: 'info',
+        position: 'top-right',
+        isClosable: true
+      })
+      await tx.wait()
+      toast({
+        title: 'Transaction Success',
+        description: 'FISH Approved.',
+        status: 'success',
+        position: 'top-right',
+        isClosable: true
+      });
+      dispatch({type: 'UPDATE_APPROVAL_TOKEN', payload: ethers.BigNumber.from("0x1431E0FAE6D7217CAA0000000")})
     } catch (error) {
-        toast({
-            title: 'Transaction Failed',
-            description: 'TXN Failed. If problem persists please notify.',
-            status: 'error',
-            position: 'top-right',
-            isClosable: true
-        })
-        console.log(error)
+      toast({
+        title: 'Transaction Failed',
+        description: 'TXN Failed. If problem persists please notify.',
+        status: 'error',
+        position: 'top-right',
+        isClosable: true
+      })
+      console.log(error)
     }
 }
 
@@ -177,7 +198,7 @@ export default function Minter() {
             <Stack justify='start' align='center' spacing={0}>
               <Heading size='md' color='rgb(50,50,50)' >Mint NFT</Heading>
               <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
-                <Text size='sm' w='100%' color='gray.300' align='center'>{supply} / 15000</Text>
+                <Text size='sm' w='100%' color='gray.300' align='center'>{supply} / 4000</Text>
               </Skeleton>
             </Stack>
             <Flex align='center' justify='space-between'>
@@ -207,12 +228,20 @@ export default function Minter() {
             </Flex>
             <Divider />
           </Stack>
-          <Button onClick={() => mintAvax(amount)} disabled={!connected} mt='2rem'>
+          <Button onClick={() => mintAvax(amount)} disabled={!connected || paused} mt='2rem'>
             Mint
           </Button>
           {!connected ?
             <Text  align='center' w='280px' color='rgb(160,160,160)' fontSize='12px' pl='1rem' lineHeight='16px'>
               Connect Your Wallet to Mint
+            </Text>
+            
+            :
+
+            paused ?
+
+            <Text  align='center' w='280px' color='rgb(160,160,160)' fontSize='12px' pl='1rem' lineHeight='16px'>
+              Contract is paused
             </Text>
 
             :
@@ -230,7 +259,7 @@ export default function Minter() {
         </Stack>
       </Stack>
 
-      {/* <Stack justify='center' align={'center'} spacing={0}>
+      <Stack justify='center' align={'center'} spacing={0}>
         <Heading>$FISH Sale</Heading>
         <Text fontSize='14px' align='center' color='rgb(160,160,160)'>
           Last 16,000 Bears minted with $FISH
@@ -245,7 +274,7 @@ export default function Minter() {
             <Stack justify='start' align='center' spacing={0}>
               <Heading size='md' color='rgb(50,50,50)' >Mint NFT</Heading>
               <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
-                <Text size='sm' w='100%' color='gray.300' align='center'>{supply} / 15000</Text>
+                <Text size='sm' w='100%' color='gray.300' align='center'>{supply} / 20000</Text>
               </Skeleton>
             </Stack>
             <Flex align='center' justify='space-between'>
@@ -275,9 +304,9 @@ export default function Minter() {
             </Flex>
             <Divider />
           </Stack>
-          {approvedFish > 10**23 ?
+          {approvedFish < 10**23 ?
             
-            <Button onClick={() => approveFish()} disabled={!connected} mt='2rem'>
+            <Button onClick={approveFish} disabled={!connected} mt='2rem'>
               Approve $FISH
             </Button>
 
@@ -307,7 +336,7 @@ export default function Minter() {
             Mint and Stake your Bear on the river to earn the tasty reward of FISH 
           </Text>
         </Stack>
-      </Stack> */}
+      </Stack>
      
     </Stack>
   )
