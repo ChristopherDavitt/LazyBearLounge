@@ -1054,10 +1054,8 @@ export default function Staking() {
                   <Button 
                     h='30px'
                     variant={'outline'}
-                    bg='white'
                     boxShadow={'md'}
                     disabled={!connected}
-                    
                     onClick={() => changePoolSelected(2, 1)}>
                     Hungry
                   </Button>
@@ -1077,10 +1075,8 @@ export default function Staking() {
               <Button 
                 h='30px'
                 variant={'outline'}
-                bg='white'
                 boxShadow={'md'}
                 disabled={!connected}
-                
                 onClick={() => unstakeAll()}
               >
                 Claim and Unstake All
@@ -1088,10 +1084,8 @@ export default function Staking() {
               <Button
                 h='30px'
                 variant={'outline'}
-                bg='white'
                 boxShadow={'md'}
                 disabled={!connected}
-                
                 onClick={() => runUnstakeSelected()}
               >
                 Claim and Unstake Selected
