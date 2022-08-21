@@ -7,7 +7,7 @@ import { Stack, Image, Box, Grid,
         Accordion, AccordionItem,
         AccordionButton, AccordionPanel,
         AccordionIcon,
-        Link,
+        Link,useColorModeValue
         } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -44,7 +44,8 @@ export default function Landing() {
   return (
     <Box>
         <Stack m={4} gap='1rem' minH='400px' justify='space-between' direction={{xsm:'column', sm: 'column',md: 'row-reverse', lg:'row-reverse', xl: 'row-reverse'}} p={4}>
-            <Image sizes='30vw' maxW='400px' src={hero} alt='hero-image'/>
+
+            <Image boxSize={{xsm: '80vw', md:'400px', lg:'400px', xl: '500px'}}  src={hero} alt='hero-image'/>
             <VStack gap='1rem' justify='center' align='start'>
                 <Heading as='h1' size='3xl' >
                     Lazy Bear River
@@ -58,9 +59,7 @@ export default function Landing() {
                         <Button 
                             h='45px'
                             variant={'outline'}
-                            bg='white'
-                            boxShadow={'md'}
-                            _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                            boxShadow={'md'}>
                             Mint Your Bear
                         </Button>
                     </RouterLink>
@@ -68,9 +67,7 @@ export default function Landing() {
                         <Button 
                             h='45px'
                             variant={'outline'}
-                            bg='white'
-                            boxShadow={'md'}
-                            _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                            boxShadow={'md'}>
                             Staking
                         </Button>
                     </RouterLink>
@@ -97,7 +94,7 @@ export default function Landing() {
                 </HStack>   
             </VStack>
         </Stack>
-        <Stack m='2rem 0' p={6} bg='rgb(245,245,245)' align='center' justify='center' gap='2rem'>
+        <Stack m='2rem 0' p={6} bg={useColorModeValue('rgb(245,245,245)', 'gray.900')}  align='center' justify='center' gap='2rem'>
             <VStack>
                 <Heading as='h2' size='xl'>
                     The River
@@ -176,7 +173,7 @@ export default function Landing() {
                 <Box w='100%'>
                     <Accordion allowToggle>
                         <AccordionItem>
-                            <AccordionButton h='50px'  bg='white'>
+                            <AccordionButton h='50px'  >
                                 <Box flex='1' textAlign='left'>
                                     <Heading fontWeight='medium' size='md'>Background</Heading>
                                 </Box>
@@ -187,13 +184,13 @@ export default function Landing() {
                                 
                             </AccordionButton>
                             <AccordionPanel pb={4}>
-                                <Flex w='50%' justify='space-between'>
+                                <Flex  w='100%' justify='space-between'>
                                     <Text fontWeight={'medium'}>Attribute</Text> 
                                     <Text fontWeight={'medium'}>Chance (%)</Text>
                                 </Flex>
                                 <Divider />
                                 {backgrounds.map((type:string, index: number) => 
-                                    <Flex key={index} w='50%' justify='space-between'>
+                                    <Flex key={index}  w='100%' justify='space-between'>
                                         <Text fontWeight={'light'}>{type}</Text> 
                                         <Text fontWeight={'light'}>{backgroundStats[index].toFixed(1)}%</Text>
                                     </Flex>
@@ -201,7 +198,7 @@ export default function Landing() {
                             </AccordionPanel>
                         </AccordionItem>
                         <AccordionItem>
-                            <AccordionButton h='50px'  bg='white'>
+                            <AccordionButton h='50px'  >
                                 <Box flex='1' textAlign='left'>
                                     <Heading fontWeight='medium' size='md'>Bear</Heading>
                                 </Box>
@@ -212,13 +209,13 @@ export default function Landing() {
                                 
                             </AccordionButton>
                             <AccordionPanel pb={4}>
-                                <Flex w='50%' justify='space-between'>
+                                <Flex  w='100%' justify='space-between'>
                                     <Text fontWeight={'medium'}>Attribute</Text> 
                                     <Text fontWeight={'medium'}>Chance (%)</Text>
                                 </Flex>
                                 <Divider />
                                 {bearType.map((type:string, index: number) => 
-                                    <Flex key={index + 7} w='50%' justify='space-between'>
+                                    <Flex key={index + 7}  w='100%' justify='space-between'>
                                         <Text fontWeight={'light'}>{type}</Text> 
                                         <Text fontWeight={'light'}>{bearTypeStats[index].toFixed(1)}%</Text>
                                     </Flex>
@@ -226,7 +223,7 @@ export default function Landing() {
                             </AccordionPanel>
                         </AccordionItem>
                         <AccordionItem>
-                            <AccordionButton h='50px'  bg='white'>
+                            <AccordionButton h='50px'  >
                                 <Box flex='1' textAlign='left'>
                                     <Heading fontWeight='medium' size='md'>Eyes</Heading>
                                 </Box>
@@ -236,13 +233,13 @@ export default function Landing() {
                                 </Flex>
                             </AccordionButton>
                             <AccordionPanel pb={4}>
-                                <Flex w='50%' justify='space-between'>
+                                <Flex  w='100%' justify='space-between'>
                                     <Text fontWeight={'medium'}>Attribute</Text> 
                                     <Text fontWeight={'medium'}>Chance (%)</Text>
                                 </Flex>
                                 <Divider />
                                 {eye.map((type:string, index: number) => 
-                                    <Flex key={index + 100} w='50%' justify='space-between'>
+                                    <Flex key={index + 100}  w='100%' justify='space-between'>
                                         <Text fontWeight={'light'}>{type}</Text> 
                                         <Text fontWeight={'light'}>{(eyeStats[index]* 2).toFixed(1)}%</Text>
                                     </Flex>
@@ -250,7 +247,7 @@ export default function Landing() {
                             </AccordionPanel>
                         </AccordionItem>
                         <AccordionItem>
-                            <AccordionButton h='50px'  bg='white'>
+                            <AccordionButton h='50px'  >
                                 <Box flex='1' textAlign='left'>
                                     <Heading fontWeight='medium' size='md'>Mouth</Heading>
                                 </Box>
@@ -260,13 +257,13 @@ export default function Landing() {
                                 </Flex>
                             </AccordionButton>
                             <AccordionPanel pb={4}>
-                                <Flex w='50%' justify='space-between'>
+                                <Flex  w='100%' justify='space-between'>
                                     <Text fontWeight={'medium'}>Attribute</Text> 
                                     <Text fontWeight={'medium'}>Chance (%)</Text>
                                 </Flex>
                                 <Divider />
                                 {mouth.map((type:string, index: number) => 
-                                    <Flex key={index + 200} w='50%' justify='space-between'>
+                                    <Flex key={index + 200}  w='100%' justify='space-between'>
                                         <Text fontWeight={'light'}>{type}</Text> 
                                         <Text fontWeight={'light'}>{(mouthStats[index]* 2).toFixed(1)}%</Text>
                                     </Flex>
@@ -274,7 +271,7 @@ export default function Landing() {
                             </AccordionPanel>
                         </AccordionItem>
                         <AccordionItem>
-                            <AccordionButton h='50px'  bg='white'>
+                            <AccordionButton h='50px'  >
                                 <Box flex='1' textAlign='left'>
                                     <Heading fontWeight='medium' size='md'>Hat</Heading>
                                 </Box>
@@ -285,13 +282,13 @@ export default function Landing() {
                                 
                             </AccordionButton>
                             <AccordionPanel pb={4}>
-                                <Flex w='50%' justify='space-between'>
+                                <Flex  w='100%' justify='space-between'>
                                     <Text fontWeight={'medium'}>Attribute</Text> 
                                     <Text fontWeight={'medium'}>Chance (%)</Text>
                                 </Flex>
                                 <Divider />
                                 {hat.map((type:string, index: number) => 
-                                    <Flex key={index + 300} w='50%' justify='space-between'>
+                                    <Flex key={index + 300}  w='100%' justify='space-between'>
                                         <Text fontWeight={'light'}>{type}</Text> 
                                         <Text fontWeight={'light'}>{(hatStats[index] * 2).toFixed(1)}%</Text>
                                     </Flex>
@@ -299,7 +296,7 @@ export default function Landing() {
                             </AccordionPanel>
                         </AccordionItem>
                         <AccordionItem>
-                            <AccordionButton h='50px'  bg='white'>
+                            <AccordionButton h='50px'  >
                                 <Box flex='1' textAlign='left'>
                                     <Heading fontWeight='medium' size='md'>Body</Heading>
                                 </Box>
@@ -310,13 +307,13 @@ export default function Landing() {
                                 
                             </AccordionButton>
                             <AccordionPanel pb={4}>
-                                <Flex w='50%' justify='space-between'>
+                                <Flex  w='100%' justify='space-between'>
                                     <Text fontWeight={'medium'}>Attribute</Text> 
                                     <Text fontWeight={'medium'}>Chance (%)</Text>
                                 </Flex>
                                 <Divider />
                                 {shirt.map((type:string, index: number) => 
-                                    <Flex key={index + 400} w='50%' justify='space-between'>
+                                    <Flex  key={index + 400} w='100%' justify='space-between'>
                                         <Text fontWeight={'light'}>{type}</Text> 
                                         <Text fontWeight={'light'}>{(shirtStats[index] * 2).toFixed(1)}%</Text>
                                     </Flex>
@@ -327,7 +324,7 @@ export default function Landing() {
                 </Box>
             </Stack>
         </Stack>
-        <Stack m='2rem 0' p={6} bg='rgb(245,245,245)' align='center' justify='center'>
+        <Stack m='2rem 0' p={6}  bg={useColorModeValue('rgb(245,245,245)', 'gray.900')} align='center' justify='center'>
             {/* <Heading>
                 Whitepaper
             </Heading>
@@ -397,7 +394,7 @@ export default function Landing() {
                 </Stack>
             </Grid>
         </Stack>
-        <Stack p={6} bg='rgb(240,240,240)'>
+        <Stack p={6} bg={useColorModeValue('rgb(245,245,245)', 'gray.900')}>
              <HStack w='100%' justify='center' gap='1rem' >
                 <Link 
                   isExternal={true}

@@ -8,6 +8,7 @@ import {
   Stack,
   Heading,
   Divider,
+  HStack,
   Skeleton,
   
 } from '@chakra-ui/react';
@@ -88,15 +89,16 @@ export default function Minter() {
         dispatch({type: 'UPDATE_NFTS_UNSTAKED', payload: nfts});
         dispatch({type: 'UPDATE_NFTS_SUPPLY', payload: supply});
       },1000) 
-    } catch (error) {
-      toast({
-        title: 'Transaction Failed',
-        description: 'TXN Failed. If problem persists please notify.',
-        status: 'error',
-        duration: 4000,
-        isClosable: true,
-        position: 'top-right'
-      })
+    } catch (error:any) {
+      if (error.code !== 4001) {
+        toast({
+          title: 'Transaction Failed',
+          description: error.data.message,
+          status: 'error',
+          position: 'top-right',
+          isClosable: true
+        })
+      }
       console.log(error)
     }
   }
@@ -133,14 +135,16 @@ export default function Minter() {
           dispatch({type: "UPDATE_AVAX", payload: Number(ethers.utils.formatEther(balance)).toFixed(4)})
         })
       },1000) 
-    } catch (error) {
-      toast({
-        title: 'Transaction Failed',
-        description: 'TXN Failed. If problem persists please notify.',
-        status: 'error',
-        isClosable: true,
-        position: 'top-right'
-      })
+    } catch (error:any) {
+      if (error.code != 4001) {
+        toast({
+          title: 'Transaction Failed',
+          description: error.data.message,
+          status: 'error',
+          position: 'top-right',
+          isClosable: true
+        })
+      }
       console.log(error)
     }
   }
@@ -169,17 +173,19 @@ export default function Minter() {
         isClosable: true
       });
       dispatch({type: 'UPDATE_APPROVAL_TOKEN', payload: ethers.BigNumber.from("0x1431E0FAE6D7217CAA0000000")})
-    } catch (error) {
-      toast({
-        title: 'Transaction Failed',
-        description: 'TXN Failed. If problem persists please notify.',
-        status: 'error',
-        position: 'top-right',
-        isClosable: true
-      })
+    } catch (error:any) {
+      if (error.code != 4001) {
+        toast({
+          title: 'Transaction Failed',
+          description: error.data.message,
+          status: 'error',
+          position: 'top-right',
+          isClosable: true
+        })
+      }
       console.log(error)
     }
-}
+  }
 
   return (
     <Stack justify='center' align='center' p={4} minH='calc(100vh - 90px)'>
@@ -193,37 +199,37 @@ export default function Minter() {
         </Text>
       </Stack>
       <Stack p={4} direction={{xsm: 'column-reverse', sm: 'column-reverse',md: 'row'}} justify='space-around' gap='2rem'>
-        <Stack minW='300px' p={4} border='solid 1px rgb(240,240,240)' borderRadius='lg' bg='white'>
+        <Stack minW='300px' p={4} border='solid 1px rgb(240,240,240)' borderRadius='lg' >
           <Stack mb='2rem' gap='0.5rem'>
             <Stack justify='start' align='center' spacing={0}>
-              <Heading size='md' color='rgb(50,50,50)' >Mint NFT</Heading>
+              <Heading size='md' >Mint NFT</Heading>
               <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
                 <Text size='sm' w='100%' color='gray.300' align='center'>{supply} / 4000</Text>
               </Skeleton>
             </Stack>
             <Flex align='center' justify='space-between'>
-              <Heading color='rgb(50,50,50)' size='sm'>Balance</Heading>
+              <Heading  size='sm'>Balance</Heading>
               <Text>{avax} AVAX</Text>
             </Flex>
             <Divider />
             <Flex align='center' justify='space-between' gap='0.5rem'>
-              <Heading color='rgb(50,50,50)' size='sm'>Amount</Heading>
-              <Flex align='center' justify='space-between'>
-                <IconButton bg='white' size='sm' boxShadow='sm' 
-                  _hover={{backgroundColor: 'rgb(250,250,250)'}} borderRadius='lg' aria-label='add' 
+              <Heading size='sm'>Amount</Heading>
+              <HStack spacing={1} align='center' justify='space-between'>
+                <IconButton size='sm' boxShadow='sm' 
+                  borderRadius='lg' aria-label='add' 
                   icon={<AddIcon w={3} h={3} />} onClick={() => addAmount()} 
                 />
                 <Text>{amount}</Text>
-                <IconButton bg='white' size='sm' boxShadow='sm' 
-                  _hover={{backgroundColor: 'rgb(250,250,250)'}} borderRadius='lg' aria-label='subtract' 
+                <IconButton size='sm' boxShadow='sm' 
+                   borderRadius='lg' aria-label='subtract' 
                   icon={<MinusIcon w={3} h={3} />} onClick={() => subAmount()}
                 />
-              </Flex>
+              </HStack>
               <Button onClick={()=>setAmount(maxAmount)}>Max</Button>
             </Flex>
             <Divider />
             <Flex justify='space-between'>
-              <Heading color='rgb(50,50,50)' size='sm'>Total</Heading>
+              <Heading size='sm'>Total</Heading>
               <Text>{costAvax * amount} AVAX</Text>
             </Flex>
             <Divider />
@@ -259,7 +265,7 @@ export default function Minter() {
         </Stack>
       </Stack>
 
-      <Stack justify='center' align={'center'} spacing={0}>
+      {/* <Stack justify='center' align={'center'} spacing={0}>
         <Heading>$FISH Sale</Heading>
         <Text fontSize='14px' align='center' color='rgb(160,160,160)'>
           Last 16,000 Bears minted with $FISH
@@ -337,7 +343,7 @@ export default function Minter() {
           </Text>
         </Stack>
       </Stack>
-     
+      */}
     </Stack>
   )
 }

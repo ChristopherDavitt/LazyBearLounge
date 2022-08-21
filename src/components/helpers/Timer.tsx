@@ -4,7 +4,7 @@ import { Button, Stack, Text, useToast } from '@chakra-ui/react';
 import { staking } from './contracts';
 import { stakingABI } from './abis';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { getTokenInfo } from './getValues';
+import { getEpoch, getTokenInfo } from './getValues';
 
 
 export default function Timer(props: any) {
@@ -16,6 +16,7 @@ export default function Timer(props: any) {
     const paused = useAppSelector((state) => state.stakingPaused);
     const address = useAppSelector((state) => state.address);
 
+    const timeToNextEpoch = 180;
     const toast = useToast();
     const dispatch = useAppDispatch();
     
@@ -23,7 +24,7 @@ export default function Timer(props: any) {
         if (props.time > 0) {
             var intervalId = setInterval(() => {
                 var date = Date.now();
-                const newTimer:number = ((4 * 60 * 60) + props.time) - (Math.trunc(date/1000)); 
+                const newTimer:number = ((180) + props.time) - (Math.trunc(date/1000)); 
                 if (newTimer < 0) {
                     clearInterval(intervalId);
                     setTimer(0);
@@ -66,6 +67,12 @@ export default function Timer(props: any) {
                 dispatch({type: 'UPDATE_CLAIMABLE', payload: rewards});
                 dispatch({type: 'UPDATE_APPROVAL_TOKEN', payload: allowance});
                 dispatch({type: 'UPDATE_RIVER_PAUSED', payload: paused});
+                const [epoch, epochTime, riverSupply] = await getEpoch(address);
+                console.log([epoch, epochTime, riverSupply])
+                dispatch({type: 'UPDATE_EPOCH', payload: epoch});
+                dispatch({type: 'UPDATE_EPOCH_TIME', payload: epochTime});
+                dispatch({type: 'UPDATE_RIVER', payload: riverSupply})
+                setTimer(timeToNextEpoch);
             },1000)
         } catch (error:any) {
           if (error.code != 4001)

@@ -1,2 +1,2 @@
-export const nft = '0xEd709431986C9794d55cC6FE025042fa07B07b86'
-export const staking = '0xF330aDc33A4C40F2C7040eE4892B4E173a7481B4'
+export const nft = '0x1ecEC2F6365df147C2D6B0459cabC3977ceC5a96'
+export const staking = '0x207709aE8B351efD310A2a85c8B7DeF770e8b0B5'

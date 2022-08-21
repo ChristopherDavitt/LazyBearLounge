@@ -14,19 +14,12 @@ import reportWebVitals from './reportWebVitals';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-// const firebaseConfig = {
-//   apiKey: "XXXXXXXXXXXXXXXXXXX",
-//   authDomain: "lazybearriver.firebaseapp.com",
-//   projectId: "lazybearriver",
-//   storageBucket: "lazybearriver.appspot.com",
-//   messagingSenderId: "XXXXXXXXXXXXXX",
-//   appId: "XXXXXXXXXXXXXXXXXXXXXXX",
-//   measurementId: "XXXXXXXXXXXXXX"
-// };
+const firebaseConfig = {
+  xxx
+};
 
-// Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 const breakpoints = {
   xsm: '30px',
@@ -45,7 +38,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    {/* <FirebaseAppProvider firebaseConfig={firebaseConfig}> */}
+    <FirebaseAppProvider firebaseConfig={firebaseConfig}>
       <Provider store={store}>
         <ChakraProvider theme={theme}>
           <Router>
@@ -53,7 +46,7 @@ root.render(
           </Router>
         </ChakraProvider>
       </Provider>
-    {/* </FirebaseAppProvider> */}
+    </FirebaseAppProvider>
   </React.StrictMode>
 );
 

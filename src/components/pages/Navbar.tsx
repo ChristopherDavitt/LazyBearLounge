@@ -9,6 +9,7 @@ import {
   Link,
   useDisclosure,
   ScaleFade,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import {
   HamburgerIcon,
@@ -24,6 +25,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getNFTData, getStaked,
          getEpoch, getTokenInfo } from '../helpers/getValues';
 import CloseWalletModal from './CloseWalletModal';
+import { ColorModeSwitcher } from '../helpers/ColorModeSwitcher';
 
 export default function Navbar(props:any) {
 
@@ -40,6 +42,7 @@ export default function Navbar(props:any) {
 
   const [connButtonText, setConnButtonText] = useState('Connect Wallet');
   const [error, setError] = useState();
+  const [colorPallete, setColorPallete] = useState([false,false,false]);
   
   const connected = useAppSelector((state) => state.connected)
 
@@ -54,6 +57,10 @@ export default function Navbar(props:any) {
           }
       } 
   },[])
+
+  const homeColor = useColorModeValue('rgb(60,60,60)', 'white');
+  const stakingColor = useColorModeValue('rgb(60,60,60)', 'white');
+  const mintColor = useColorModeValue('rgb(60,60,60)', 'white');
 
   const handleChainChange = () => {
       window.location.reload()
@@ -173,6 +180,7 @@ export default function Navbar(props:any) {
     <>
     <Box 
       px={4}
+      bg={useColorModeValue('white', 'gray.800')}
     >
       <Flex
         gap='1rem'
@@ -190,7 +198,9 @@ export default function Navbar(props:any) {
               as={RouterLink} 
               to='/'
               style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-              sx={{fontWeight: `${props.highlight == '/' ? '700' : '600'}`, fontSize: '18px', color: `${props.highlight == '/' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
+              fontWeight={props.highlight == '/' ? '700' : '600'}
+              fontSize='18px'
+              color={props.highlight == '/' ? homeColor : 'rgb(150,150,150)'}
               >
               Home
             </Link>
@@ -199,8 +209,9 @@ export default function Navbar(props:any) {
               display={{xsm: 'none', sm:'inherit', md: 'inherit', lg:'inherit' }}
               to='/staking'
               style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-              sx={{fontWeight: `${props.highlight == '/staking' ? '700' : '600'}`, fontSize: '18px',  color: `${props.highlight == '/staking' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
-             
+              fontWeight={props.highlight == '/staking' ? '700' : '600'}
+              fontSize='18px'
+              color={props.highlight == '/staking' ? stakingColor : 'rgb(150,150,150)'}
               >
               Staking
             </Link>
@@ -209,8 +220,9 @@ export default function Navbar(props:any) {
               display={{xsm: 'none', sm:'inherit', md: 'inherit', lg:'inherit' }}
               to='/mint'
               style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-              sx={{fontWeight: `${props.highlight == '/mint' ? '700' : '600'}`, fontSize: '18px',  color: `${props.highlight == '/mint' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
-              
+              fontWeight={props.highlight == '/mint' ? '700' : '600'}
+              fontSize='18px'
+              color={props.highlight == '/mint' ? mintColor : 'rgb(150,150,150)'}
               >
               Mint
             </Link>
@@ -226,13 +238,17 @@ export default function Navbar(props:any) {
           </Flex>
           <Flex
             gap='1rem'
-            align='center'>
+            align='center'
+          >
+            <ColorModeSwitcher />
             <Button
               display={{xsm: 'none', sm: 'none', md: 'inherit', lg: 'inherit'}}
               w='90px'
               h='36px'
               variant='unstyled'
-              sx={{backgroundColor: 'rgb(254,249,244)', color: 'rgb(232,65,66)', cursor: 'text'}}>
+              color='rgb(232,65,66)'
+              bg={useColorModeValue('rgb(245,245,245)', 'gray.900')}
+              cursor='text'>
               Fuji
             </Button>
             <Button
@@ -260,7 +276,9 @@ export default function Navbar(props:any) {
                   as={RouterLink} 
                   to='/'
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-                  sx={{fontWeight: `${props.highlight == '/' ? '700' : '600'}`, fontSize: '18px',  color: `${props.highlight == '/' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
+                  fontWeight={props.highlight == '/' ? '700' : '600'}
+                  fontSize='18px'
+                  color={props.highlight == '/' ? homeColor : 'rgb(150,150,150)'}
                   >
                   Home
                 </Link>
@@ -268,7 +286,9 @@ export default function Navbar(props:any) {
                   as={RouterLink} 
                   to='/staking'
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-                  sx={{fontWeight: `${props.highlight == '/staking' ? '700' : '600'}`, fontSize: '18px',  color: `${props.highlight == '/staking' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
+                  fontWeight={props.highlight == '/staking' ? '700' : '600'}
+                  fontSize='18px'
+                  color={props.highlight == '/staking' ? homeColor : 'rgb(150,150,150)'}
                   >
                   Staking
                 </Link>
@@ -276,13 +296,17 @@ export default function Navbar(props:any) {
                   as={RouterLink} 
                   to='/mint'
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-                  sx={{fontWeight: `${props.highlight == '/mint' ? '700' : '600'}`, fontSize: '18px',  color: `${props.highlight == '/mint' ? 'rgb(60,60,60)' : 'rgb(150,150,150)'}`}}
+                  fontWeight={props.highlight == '/mint' ? '700' : '600'}
+                  fontSize='18px'
+                  color={props.highlight == '/mint' ? homeColor : 'rgb(150,150,150)'}
                   >
                   Mint
                 </Link>
                 <Link 
                   style={{textDecoration: 'none', WebkitTextDecorationLine: 'none'}}
-                  sx={{fontWeight: '600', fontSize: '18px', color: 'rgb(150,150,150)'}}
+                  fontWeight={props.highlight == '/' ? '700' : '600'}
+                  fontSize='18px'
+                  color='rgb(150,150,150)'
                   isExternal={true}
                   href='https://lazybearriver.gitbook.io/docs/'
                   >

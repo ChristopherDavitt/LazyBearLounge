@@ -13,6 +13,7 @@ import {
   Grid,
   Hide,
   Show,
+  useColorModeValue,
   Skeleton,
   
 } from '@chakra-ui/react';
@@ -157,6 +158,41 @@ export default function Staking() {
       changeStakePool(newArray, to)
     }
   }
+  const runUnstakeSelected = () => {
+    const newArray: number[] = [];
+    
+    for (let i = 0; i < peaceful.length; i++) {
+      if (peacefulBool[i]) {
+        newArray.push(peaceful[i])
+      }
+    }
+  
+    for (let i = 0; i < hungry.length; i++) {
+      if (hungryBool[i]) {
+        newArray.push(hungry[i])
+      }
+    }
+  
+    for (let i = 0; i < frenzy.length; i++) {
+      if (frenzyBool[i]) {
+        newArray.push(frenzy[i])
+      }
+    }
+    
+    
+    if (newArray.length === 0) {
+      toast({
+        title: 'No Bears Selected',
+        description: 'Please Select NFTs To unstake',
+        status: 'warning',
+        position: 'top-right',
+        isClosable: true
+      })
+    } else {
+      unstakeSelected(newArray)
+    }
+  }
+
 
   const stake = async(nfts: number[], poolNum: number) => {
     const ethers = require('ethers')
@@ -197,15 +233,118 @@ export default function Staking() {
         
 
     } catch (error:any) {
-      if (error.code != 4001)
+      if (error.code != 4001) {
         toast({
           title: 'Transaction Failed',
-          description: 'TXN Failed. If problem persists please notify.',
+          description: error.data.message,
           status: 'error',
           position: 'top-right',
           isClosable: true
         })
-        console.log(error)
+      }
+      console.log(error)
+    }
+  }
+  const unstakeAll = async() => {
+    const ethers = require('ethers')
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+    const stakingContract = new ethers.Contract(staking, stakingABI, signer)
+    // Staked Bears
+    try {
+        const tx = await stakingContract.unstakeAll();
+        toast({
+          title: 'Transaction Sent',
+          description: 'Unstaking All Bears',
+          status: 'info',
+          position: 'top-right',
+          isClosable: true
+        })
+        await tx.wait()
+        toast({
+          title: 'Transaction Success',
+          description: 'Staking pools updated.',
+          status: 'success',
+          position: 'top-right',
+          isClosable: true
+        });
+        console.log('Updating State')
+        setTimeout(async () => {
+          const [ nftList, supply, approved, paused ] = await getNFTData(address);
+          dispatch({type: 'UPDATE_NFTS_UNSTAKED', payload: nftList});
+          dispatch({type: 'UPDATE_NFTS_SUPPLY', payload: supply});
+          const [ peaceful, hungry, frenzy, pNum, hNum, fNum ] = await getStaked(address);
+          dispatch({type: 'UPDATE_NFTS_PEACEFUL', payload: peaceful});
+          dispatch({type: 'UPDATE_NFTS_HUNGRY', payload: hungry});
+          dispatch({type: 'UPDATE_NFTS_FRENZY', payload: frenzy});
+          dispatch({type: 'UPDATE_PEACEFUL_NUM', payload: pNum});
+          dispatch({type: 'UPDATE_HUNGRY_NUM', payload: hNum});
+          dispatch({type: 'UPDATE_FRENZY_NUM', payload: fNum});
+        },1000)
+        
+
+    } catch (error:any) {
+      if (error.code != 4001) {
+        toast({
+          title: 'Transaction Failed',
+          description: error.data.message,
+          status: 'error',
+          position: 'top-right',
+          isClosable: true
+        })
+      }
+      console.log(error)
+    }
+  }
+  const unstakeSelected = async(nfts: number[]) => {
+    const ethers = require('ethers')
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+    const stakingContract = new ethers.Contract(staking, stakingABI, signer)
+    // Staked Bears
+    try {
+        const tx = await stakingContract.unstakeSelected(nfts);
+        toast({
+          title: 'Transaction Sent',
+          description: 'Unstaking Your Bears.',
+          status: 'info',
+          position: 'top-right',
+          isClosable: true
+        })
+        await tx.wait()
+        toast({
+          title: 'Transaction Success',
+          description: 'Staking pools updated.',
+          status: 'success',
+          position: 'top-right',
+          isClosable: true
+        });
+        console.log('Updating State')
+        setTimeout(async () => {
+          const [ nftList, supply, approved, paused ] = await getNFTData(address);
+          dispatch({type: 'UPDATE_NFTS_UNSTAKED', payload: nftList});
+          dispatch({type: 'UPDATE_NFTS_SUPPLY', payload: supply});
+          const [ peaceful, hungry, frenzy, pNum, hNum, fNum ] = await getStaked(address);
+          dispatch({type: 'UPDATE_NFTS_PEACEFUL', payload: peaceful});
+          dispatch({type: 'UPDATE_NFTS_HUNGRY', payload: hungry});
+          dispatch({type: 'UPDATE_NFTS_FRENZY', payload: frenzy});
+          dispatch({type: 'UPDATE_PEACEFUL_NUM', payload: pNum});
+          dispatch({type: 'UPDATE_HUNGRY_NUM', payload: hNum});
+          dispatch({type: 'UPDATE_FRENZY_NUM', payload: fNum});
+        },1000)
+        
+
+    } catch (error:any) {
+      if (error.code != 4001) {
+        toast({
+          title: 'Transaction Failed',
+          description: error.data.message,
+          status: 'error',
+          position: 'top-right',
+          isClosable: true
+        })
+      }
+      console.log(error)
     }
   }
 
@@ -216,33 +355,34 @@ export default function Staking() {
     const nftContract = new ethers.Contract(nft, nftABI, signer)
     // Staked Bears
     try {
-        const tx = await nftContract.setApprovalForAll(staking, true);
-        toast({
-            title: 'Transaction Sent',
-            description: 'Setting Approval For Staking Contract.',
-            status: 'info',
-            position: 'top-right',
-            isClosable: true
-        })
-        await tx.wait()
-        toast({
-            title: 'Transaction Success',
-            description: 'Approved.',
-            status: 'success',
-            position: 'top-right',
-            isClosable: true
-        }) 
-        dispatch({type:'UPDATE_APPROVAL_NFTS', payload: true})
+      const tx = await nftContract.setApprovalForAll(staking, true);
+      toast({
+        title: 'Transaction Sent',
+        description: 'Setting Approval For Staking Contract.',
+        status: 'info',
+        position: 'top-right',
+        isClosable: true
+      })
+      await tx.wait()
+      toast({
+        title: 'Transaction Success',
+        description: 'Approved.',
+        status: 'success',
+        position: 'top-right',
+        isClosable: true
+      }) 
+      dispatch({type:'UPDATE_APPROVAL_NFTS', payload: true})
     } catch (error:any) {
-      if (error.code != 4001)
+      if (error.code != 4001) {
         toast({
-            title: 'Transaction Failed',
-            description: 'TXN Failed. If problem persists please notify.',
-            status: 'error',
-            position: 'top-right',
-            isClosable: true
+          title: 'Transaction Failed',
+          description: error.data.message,
+          status: 'error',
+          position: 'top-right',
+          isClosable: true
         })
-        console.log(error)
+      }
+      console.log(error)
     }
   }
 
@@ -280,15 +420,16 @@ export default function Staking() {
         }, 1000)
         
     } catch (error:any) {
-      if (error.code != 4001)
+      if (error.code != 4001) {
         toast({
-            title: 'Transaction Failed',
-            description: 'TXN Failed. If problem persists please notify.',
-            status: 'error',
-            position: 'top-right',
-            isClosable: true
+          title: 'Transaction Failed',
+          description: error.data.message,
+          status: 'error',
+          position: 'top-right',
+          isClosable: true
         })
-        console.log(error)
+      }
+      console.log(error)
     }
   }
   const claimRewards = async() => {
@@ -321,15 +462,16 @@ export default function Staking() {
       },1000)
       
     } catch (error:any) {
-      if (error.code != 4001)
+      if (error.code != 4001) {
         toast({
-            title: 'Transaction Failed',
-            description: 'TXN Failed. If problem persists please notify.',
-            status: 'error',
-            position: 'top-right',
-            isClosable: true
+          title: 'Transaction Failed',
+          description: error.data.message,
+          status: 'error',
+          position: 'top-right',
+          isClosable: true
         })
-        console.log(error)
+      }
+      console.log(error)
     }
   }
 
@@ -340,7 +482,6 @@ export default function Staking() {
       justify='center'
       p={4}
       gap='1rem'
-      bg='white'
       minH={{md: '620px'}}
       m='auto'
       direction='column'
@@ -361,12 +502,11 @@ export default function Staking() {
           borderRadius='lg'
           spacing={0}
           p='0.5rem'
-          bg='rgb(240,240,240)'
+          bg={useColorModeValue('rgb(240,240,240)', 'blackAlpha.100')}
           >
           <Heading 
             as='h3'
             size='lg'
-            color='rgb(60,60,60)'
             >
             Current Epoch
           </Heading>
@@ -374,7 +514,6 @@ export default function Staking() {
             <Text
               fontSize='lg'
               fontWeight='medium'
-              color='rgb(160,160,160)'
               align='center'>
               {epoch}
             </Text>
@@ -382,7 +521,6 @@ export default function Staking() {
           <Heading 
             as='h3'
             size='lg'
-            color='rgb(60,60,60)'
             >
             Next Epoch
           </Heading>
@@ -398,20 +536,18 @@ export default function Staking() {
           borderRadius='lg'
           spacing={0}
           p='0.5rem'
-          bg='rgb(240,240,240)'
+          bg={useColorModeValue('rgb(240,240,240)', 'blackAlpha.100')}
           
           >
           <Heading
             as='h3'
-            size='lg'
-            color='rgb(60,60,60)'>
+            size='lg'>
             Balance
           </Heading>
           <Skeleton h='20px' w='90%' fadeDuration={1} isLoaded={connected}>
             <Text
               fontSize='lg'
               fontWeight='medium'
-              color='rgb(160,160,160)'
               align='center'>
               {(balance / (10 ** 18)).toFixed(2)} $FISH
             </Text>
@@ -419,7 +555,6 @@ export default function Staking() {
           <Heading 
             as='h3'
             size='lg'
-            color='rgb(60,60,60)'
             >
             Claim Rewards
           </Heading>
@@ -428,7 +563,6 @@ export default function Staking() {
               <Text 
                 fontSize='lg'
                 fontWeight='medium'
-                color='rgb(160,160,160)'
                 align='center'
                 >
                 {claimable} $FISH
@@ -437,9 +571,7 @@ export default function Staking() {
             <Button 
               h='30px'
               variant={'outline'}
-              bg='white'
               boxShadow={'md'}
-              _hover={{backgroundColor: 'rgb(245,245,245)'}}
               disabled={!connected || claimable <= 0}
               onClick={() => claimRewards()}>
               Claim
@@ -455,12 +587,11 @@ export default function Staking() {
           borderRadius='lg'
           spacing={0}
           p='0.5rem'
-          bg='rgb(240,240,240)'
+          bg={useColorModeValue('rgb(240,240,240)', 'blackAlpha.100')}
           >
           <Heading 
             as='h3'
             size='lg'
-            color='rgb(60,60,60)'
             >
             River Supply
           </Heading>
@@ -469,7 +600,6 @@ export default function Staking() {
             h='25px'
             borderRadius='7px'
             border='solid 1px rgb(60,60,60)'
-            bg={'white'}
             boxShadow='md'>
             <Stack  
               w={String(riverSupply / 271828 * 100) + '%'}
@@ -481,14 +611,13 @@ export default function Staking() {
               <Text
                 fontSize='lg'
                 fontWeight='600'
-                color='rgb(60,60,60)'
                 as='i'
                 >
                 {riverSupply}
               </Text>
             </Stack>
           </Box>
-          <Text align='center' color='gray.700' fontSize='sm'>
+          <Text align='center' color={useColorModeValue('gray.700', 'gray.200')} fontSize='sm'>
             The river supply increases by 2x every epoch. Carrying Capacity is 271828 Fish.
           </Text>
         </VStack>
@@ -501,12 +630,11 @@ export default function Staking() {
           borderRadius='lg'
           spacing={0}
           p='0.5rem'
-          bg='rgb(240,240,240)'
+          bg={useColorModeValue('rgb(240,240,240)', 'blackAlpha.100')}
           >
           <Heading
             as='h3'
-            size='lg'
-            color='rgb(60,60,60)'>
+            size='lg'>
             Bears Staked
           </Heading>
           <Flex
@@ -517,8 +645,7 @@ export default function Staking() {
             <Image src={peacefulIcon} alt='p-pic' />
             <VStack w='70px' align='start'>
               <Text
-                fontSize='md'
-                color='rgb(60,60,60)'>
+                fontSize='md'>
                 Peaceful
               </Text>
               <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
@@ -537,13 +664,11 @@ export default function Staking() {
             <Image src={hungryIcon} alt='p-pic' />
             <VStack w='70px' align='start'>
               <Text
-                fontSize='md'
-                color='rgb(60,60,60)'>
+                fontSize='md'>
                 Hungry
               </Text>
               <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
-                <Text align='center'
-                  fontWeight='medium'>
+                <Text align='center' fontWeight='medium'>
                   {hungryNum}
                 </Text>
               </Skeleton>
@@ -556,9 +681,7 @@ export default function Staking() {
             >
             <Image src={frenzyIcon} alt='p-pic' />
             <VStack w='70px' align='start'>
-              <Text
-                fontSize='md'
-                color='rgb(60,60,60)'>
+              <Text fontSize='md'>
                 Frenzy
               </Text>
               <Skeleton h='20px' w='100%' fadeDuration={1} isLoaded={connected}>
@@ -574,12 +697,11 @@ export default function Staking() {
       <Box
         w='calc(100vw - 40px)'
         maxW='1200px' 
-        minH='690px'
-        h={{xsm: '1007px', sm: 'calc(100vh - 150px)'}}
-        maxH={{sm: '730px'}}
+        minH='730px'
+        h={{xsm: '1057px', sm: '787px'}}
         borderRadius='lg'
         p='0.5rem 1rem'
-        bg='rgb(240,240,240)'
+        bg={useColorModeValue('rgb(240,240,240)', 'blackAlpha.100')}
         boxShadow={'md'}
         >
         <VStack 
@@ -592,7 +714,6 @@ export default function Staking() {
           <Flex 
             justify='space-between'  
             w='100%' 
-            color='rgb(60,60,60)' 
             align='center'>
             <Flex gap='5px' align='center'>
               <Heading as='h5'>
@@ -623,31 +744,28 @@ export default function Staking() {
                   <Button 
                     h='30px'
                     variant={'outline'}
-                    bg='white'
                     boxShadow={'md'}
                     disabled={!connected}
                     onClick={() => stakeSelected(0)}
-                    _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                    >
                     Peaceful
                   </Button>
                   <Button 
                     h='30px'
                     variant={'outline'}
-                    bg='white'
                     boxShadow={'md'}
                     disabled={!connected}
                     onClick={() => stakeSelected(1)}
-                    _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                    >
                     Hungry
                   </Button>
                   <Button 
                     h='30px'
                     variant={'outline'}
-                    bg='white'
                     boxShadow={'md'}
                     disabled={!connected}
                     onClick={() => stakeSelected(2)}
-                    _hover={{backgroundColor: 'rgb(245,245,245)'}}>
+                    >
                     Frenzy
                   </Button>
                 </Grid>
@@ -657,18 +775,16 @@ export default function Staking() {
                 <Button 
                   h='30px'
                   variant={'outline'}
-                  bg='white'
                   boxShadow={'md'}
                   disabled={!connected}
                   onClick={() => approveNFT()}
-                  _hover={{backgroundColor: 'rgb(245,245,245)'}}
                   >
                   Approve Staking
                 </Button>
               }
             </Flex>
           </Flex>
-          <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
+          <HStack p={2} spacing='10px' bg={useColorModeValue('white', 'gray.800')} borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
             {/* Map through the list of unstaked NFTs */}
             {nftBool.map((bool:boolean, index:number) => 
               <Stack key={index} onClick={() => clickNftUnstaked(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
@@ -694,29 +810,29 @@ export default function Staking() {
                     <Button 
                       h='30px'
                       variant={'outline'}
-                      bg='white'
+                      
                       boxShadow={'md'}
                       disabled={!connected}
-                      _hover={{backgroundColor: 'rgb(245,245,245)'}}
+                      
                       onClick={() => changePoolSelected(0, 1)}>
                       Hungry
                     </Button>
                     <Button 
                       h='30px'
                       variant={'outline'}
-                      bg='white'
+                      
                       boxShadow={'md'}
                       disabled={!connected}
-                      _hover={{backgroundColor: 'rgb(245,245,245)'}}
+                      
                       onClick={() => changePoolSelected(0, 2)}>
                       Frenzy
                     </Button>
                   </Stack>
                 </HStack>
-                <Grid justifyItems='center' templateColumns={{ lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                <Grid justifyItems='center' templateColumns={{ lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg={useColorModeValue('white', 'gray.800')}  borderRadius='7px' boxShadow='md' w='100%' h='400px' overflowY='auto'>
                   {peacefulBool.map((bool:boolean, index:number) => 
                     <Stack key={index + 15000} onClick={() => clickNftPeaceful(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
-                            bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                            bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px'  p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                       <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${peaceful[index]}.png`} alt='id-pic' loading='lazy' />
                       <Text fontWeight={'bold'} >#{peaceful[index]}</Text>
                     </Stack>
@@ -738,26 +854,26 @@ export default function Staking() {
                     <Button 
                       h='30px'
                       variant={'outline'}
-                      bg='white'
+                      
                       boxShadow={'md'}
                       disabled={!connected}
-                      _hover={{backgroundColor: 'rgb(245,245,245)'}}
+                      
                       onClick={() => changePoolSelected(1, 0)}>
                       Peaceful
                     </Button>
                     <Button 
                       h='30px'
                       variant={'outline'}
-                      bg='white'
+                      
                       boxShadow={'md'}
                       disabled={!connected}
-                      _hover={{backgroundColor: 'rgb(245,245,245)'}}
+                      
                       onClick={() => changePoolSelected(1, 2)}>
                       Frenzy
                     </Button>
                   </Stack>
                 </HStack>
-                <Grid justifyItems='center' templateColumns={{lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                <Grid justifyItems='center' templateColumns={{lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg={useColorModeValue('white', 'gray.800')}  borderRadius='7px' boxShadow='md' w='100%' h='400px' overflowY='auto'>
                   {hungryBool.map((bool:boolean, index:number) => 
                     <Stack key={index + 30000} onClick={() => clickNftHungry(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
                           bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
@@ -781,29 +897,29 @@ export default function Staking() {
                     <Button 
                       h='30px'
                       variant={'outline'}
-                      bg='white'
+                      
                       boxShadow={'md'}
                       disabled={!connected}
-                      _hover={{backgroundColor: 'rgb(245,245,245)'}}
+                      
                       onClick={() => changePoolSelected(2,0)}>
                       Peaceful
                     </Button>
                     <Button 
                       h='30px'
                       variant={'outline'}
-                      bg='white'
+                      
                       boxShadow={'md'}
                       disabled={!connected}
-                      _hover={{backgroundColor: 'rgb(245,245,245)'}}
+                      
                       onClick={() => changePoolSelected(2, 1)}>
                       Hungry
                     </Button>
                   </Stack>
                 </HStack>
-                <Grid justifyItems='center' templateColumns={{ lg: '1fr 1fr'}}  p='1rem 0 0.5rem 0.5rem' bg='white' borderRadius='7px' boxShadow='md' w='100%'  minH='135px' h='calc(100% - 40px)' overflowY='auto'>
+                <Grid justifyItems='center' templateColumns={{ lg: '1fr 1fr'}}  p='1rem 0 0.5rem 0.5rem' bg={useColorModeValue('white', 'gray.800')}  borderRadius='7px' boxShadow='md' w='100%'  h='400px' overflowY='auto'>
                   {frenzyBool.map((bool:boolean, index:number) => 
                     <Stack key={index + 45000} onClick={() => clickNftFrenzy(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
-                          bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                          bg={bool ? 'rgb(210, 210, 210)' : 'none' } maxH='115px' h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                       <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${frenzy[index]}.png`} alt='id-pic' loading='lazy' />
                       <Text fontWeight={'bold'} >#{frenzy[index]}</Text>
                     </Stack>
@@ -811,6 +927,30 @@ export default function Staking() {
                 </Grid>
               </VStack>
             </HStack>
+            <HStack align='space-between' justify='space-around' w='100%'>
+              <Button 
+                h='40px'
+                variant={'outline'}
+                
+                boxShadow={'md'}
+                disabled={!connected}
+                
+                onClick={() => unstakeAll()}
+              >
+                Claim and Unstake All
+              </Button>
+              <Button
+                h='40px'
+                variant={'outline'}
+                
+                boxShadow={'md'}
+                disabled={!connected}
+                
+                onClick={() => runUnstakeSelected()}
+              >
+                Claim and Unstake Selected
+              </Button>
+            </HStack> 
           </Hide>
           <Show below='sm'>
             <Flex w='100%' align='center' justify='space-between'>
@@ -824,27 +964,27 @@ export default function Staking() {
                   <Button 
                     h='30px'
                     variant={'outline'}
-                    bg='white'
+                    
                     boxShadow={'md'}
                     disabled={!connected}
-                    _hover={{backgroundColor: 'rgb(245,245,245)'}}
+                    
                     onClick={() => changePoolSelected(0, 1)}>
                     Hungry
                   </Button>
                   <Button 
                     h='30px'
                     variant={'outline'}
-                    bg='white'
+                    
                     boxShadow={'md'}
                     disabled={!connected}
-                    _hover={{backgroundColor: 'rgb(245,245,245)'}}
+                    
                     onClick={() => changePoolSelected(0, 2)}>
                     Frenzy
                   </Button>
                 </Stack>
               </Flex>
             </Flex>
-            <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
+            <HStack p={2} spacing='10px' bg={useColorModeValue('white', 'gray.800')}  borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
               {peacefulBool.map((bool:boolean, index:number) => 
                 <Stack key={index + 15000} onClick={() => clickNftPeaceful(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
                         bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
@@ -864,27 +1004,27 @@ export default function Staking() {
                   <Button 
                     h='30px'
                     variant={'outline'}
-                    bg='white'
+                    
                     boxShadow={'md'}
                     disabled={!connected}
-                    _hover={{backgroundColor: 'rgb(245,245,245)'}}
+                    
                     onClick={() => changePoolSelected(1, 0)}>
                     Peaceful
                   </Button>
                   <Button 
                     h='30px'
                     variant={'outline'}
-                    bg='white'
+                    
                     boxShadow={'md'}
                     disabled={!connected}
-                    _hover={{backgroundColor: 'rgb(245,245,245)'}}
+                    
                     onClick={() => changePoolSelected(1, 2)}>
                     Frenzy
                   </Button>
                 </Stack>
               </Flex>
             </Flex>
-            <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
+            <HStack p={2} spacing='10px' bg={useColorModeValue('white', 'gray.800')}  borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
               {hungryBool.map((bool:boolean, index:number) => 
                 <Stack key={index + 30000} onClick={() => clickNftHungry(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
                         bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
@@ -904,10 +1044,10 @@ export default function Staking() {
                   <Button 
                     h='30px'
                     variant={'outline'}
-                    bg='white'
+                    
                     boxShadow={'md'}
                     disabled={!connected}
-                    _hover={{backgroundColor: 'rgb(245,245,245)'}}
+                    
                     onClick={() => changePoolSelected(2, 0)}>
                     Peaceful
                   </Button>
@@ -917,14 +1057,14 @@ export default function Staking() {
                     bg='white'
                     boxShadow={'md'}
                     disabled={!connected}
-                    _hover={{backgroundColor: 'rgb(245,245,245)'}}
+                    
                     onClick={() => changePoolSelected(2, 1)}>
                     Hungry
                   </Button>
                 </Stack>
               </Flex>
             </Flex>
-            <HStack p={2} spacing='10px' bg='white' borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
+            <HStack p={2} spacing='10px' bg={useColorModeValue('white', 'gray.800')}  borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
               {frenzyBool.map((bool:boolean, index:number) => 
                 <Stack key={index + 45000} onClick={() => clickNftFrenzy(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
                         bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
@@ -933,8 +1073,32 @@ export default function Staking() {
                 </Stack>
               )}
             </HStack>
+            <VStack align='space-between' justify='space-around' w='100%'>
+              <Button 
+                h='30px'
+                variant={'outline'}
+                bg='white'
+                boxShadow={'md'}
+                disabled={!connected}
+                
+                onClick={() => unstakeAll()}
+              >
+                Claim and Unstake All
+              </Button>
+              <Button
+                h='30px'
+                variant={'outline'}
+                bg='white'
+                boxShadow={'md'}
+                disabled={!connected}
+                
+                onClick={() => runUnstakeSelected()}
+              >
+                Claim and Unstake Selected
+              </Button>
+            </VStack>  
           </Show>
-        </VStack>  
+        </VStack> 
       </Box>     
     </Stack>
   )
