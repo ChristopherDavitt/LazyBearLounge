@@ -55,6 +55,7 @@ export default function Staking() {
   const [hungryBool, setHungryBool] = useState<boolean[]>([]);
   const [frenzyBool, setFrenzyBool] = useState<boolean[]>([]);
 
+  const backgroundSelected = useColorModeValue('rgb(210,210,210)', 'blackAlpha.600')
 
   useEffect(() => {
     const nftBoolArray = new Array(nfts.length).fill(false);
@@ -788,7 +789,7 @@ export default function Staking() {
             {/* Map through the list of unstaked NFTs */}
             {nftBool.map((bool:boolean, index:number) => 
               <Stack key={index} onClick={() => clickNftUnstaked(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
-                     bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                     bg={bool ? backgroundSelected : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                 <Image borderRadius='7px' w='100%' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${nfts[index]}.png`} alt='id-pic' loading='lazy' />
                 <Text fontWeight={'bold'} >#{nfts[index]}</Text>
               </Stack>
@@ -832,7 +833,7 @@ export default function Staking() {
                 <Grid justifyItems='center' templateColumns={{ lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg={useColorModeValue('white', 'gray.800')}  borderRadius='7px' boxShadow='md' w='100%' h='400px' overflowY='auto'>
                   {peacefulBool.map((bool:boolean, index:number) => 
                     <Stack key={index + 15000} onClick={() => clickNftPeaceful(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
-                            bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px'  p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                            bg={bool ? backgroundSelected : 'none' } h='115px'  p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                       <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${peaceful[index]}.png`} alt='id-pic' loading='lazy' />
                       <Text fontWeight={'bold'} >#{peaceful[index]}</Text>
                     </Stack>
@@ -876,7 +877,7 @@ export default function Staking() {
                 <Grid justifyItems='center' templateColumns={{lg: '1fr 1fr'}} p='1rem 0 0.5rem 0.5rem' bg={useColorModeValue('white', 'gray.800')}  borderRadius='7px' boxShadow='md' w='100%' h='400px' overflowY='auto'>
                   {hungryBool.map((bool:boolean, index:number) => 
                     <Stack key={index + 30000} onClick={() => clickNftHungry(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
-                          bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                          bg={bool ? backgroundSelected : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                       <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${hungry[index]}.png`} alt='id-pic' loading='lazy' />
                       <Text fontWeight={'bold'} >#{hungry[index]}</Text>
                     </Stack>
@@ -919,7 +920,7 @@ export default function Staking() {
                 <Grid justifyItems='center' templateColumns={{ lg: '1fr 1fr'}}  p='1rem 0 0.5rem 0.5rem' bg={useColorModeValue('white', 'gray.800')}  borderRadius='7px' boxShadow='md' w='100%'  h='400px' overflowY='auto'>
                   {frenzyBool.map((bool:boolean, index:number) => 
                     <Stack key={index + 45000} onClick={() => clickNftFrenzy(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
-                          bg={bool ? 'rgb(210, 210, 210)' : 'none' } maxH='115px' h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                          bg={bool ? backgroundSelected : 'none' } maxH='115px' h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                       <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${frenzy[index]}.png`} alt='id-pic' loading='lazy' />
                       <Text fontWeight={'bold'} >#{frenzy[index]}</Text>
                     </Stack>
@@ -987,7 +988,7 @@ export default function Staking() {
             <HStack p={2} spacing='10px' bg={useColorModeValue('white', 'gray.800')}  borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
               {peacefulBool.map((bool:boolean, index:number) => 
                 <Stack key={index + 15000} onClick={() => clickNftPeaceful(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
-                        bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                        bg={bool ? backgroundSelected : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                   <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${peaceful[index]}.png`} alt='id-pic' loading='lazy' />
                   <Text fontWeight={'bold'} >#{peaceful[index]}</Text>
                 </Stack>
@@ -1027,7 +1028,7 @@ export default function Staking() {
             <HStack p={2} spacing='10px' bg={useColorModeValue('white', 'gray.800')}  borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
               {hungryBool.map((bool:boolean, index:number) => 
                 <Stack key={index + 30000} onClick={() => clickNftHungry(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
-                        bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                        bg={bool ? backgroundSelected : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                   <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${hungry[index]}.png`} alt='id-pic' loading='lazy' />
                   <Text fontWeight={'bold'} >#{hungry[index]}</Text>
                 </Stack>
@@ -1065,7 +1066,7 @@ export default function Staking() {
             <HStack p={2} spacing='10px' bg={useColorModeValue('white', 'gray.800')}  borderRadius='7px' boxShadow='md' w='100%' minH='140px' overflowX='auto' overflowY='hidden'>
               {frenzyBool.map((bool:boolean, index:number) => 
                 <Stack key={index + 45000} onClick={() => clickNftFrenzy(index)} cursor='pointer' w='100px' minW='100px' border='solid 1px rgb(240,240,240)' 
-                        bg={bool ? 'rgb(210, 210, 210)' : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
+                        bg={bool ? backgroundSelected : 'none' } h='115px' p='5px 10px' borderRadius='7px' justify='start' align='left' spacing='5px'>
                   <Image borderRadius='7px' w='80px' src={`https://joepegs.mypinata.cloud/ipfs/Qmf66mXDewwSKsFuysXUXQsjPzSdpUfcKodWLx9VWrXNV3/${frenzy[index]}.png`} alt='id-pic' loading='lazy' />
                   <Text fontWeight={'bold'} >#{frenzy[index]}</Text>
                 </Stack>
