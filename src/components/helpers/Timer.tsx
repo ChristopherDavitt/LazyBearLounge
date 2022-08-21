@@ -92,7 +92,6 @@ export default function Timer(props: any) {
             <Text 
                 fontSize='lg'
                 fontWeight='medium'
-                color='rgb(160,160,160)'
                 align='center'
             >
                 0{Math.trunc(timer / 3600)} : {(timer / 60) % 60 < 10 && '0'}{Math.trunc((timer / 60) % 60)} : {timer % 60 < 10 && '0'}{Math.trunc(timer % 60)}
@@ -104,9 +103,7 @@ export default function Timer(props: any) {
                 w='180px' 
                 h='30px'
                 variant={'outline'}
-                bg='white'
                 boxShadow={'md'}
-                _hover={{backgroundColor: 'rgb(245,245,245)'}}
                 disabled={paused || !connected} onClick={() => changeTheEpoch()}
             >
                 Change Epoch
